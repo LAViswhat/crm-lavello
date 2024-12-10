@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-medium text-primary bg-bg-color-primary leading-7;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold mb-3;
+  }
+  h1 {
+    @apply text-3xl uppercase;
+  }
+
+  h2 {
+    @apply text-2xl uppercase;
+  }
+
+  h3 {
+    @apply text-xl uppercase;
+  }
+  p {
+    @apply mb-4;
+  }
+  ol,
+  ul {
+    @apply pl-8;
+  }
+  ul li,
+  ol li {
+    @apply mb-2;
+  }
+}
