@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     "@nuxt/fonts",
     "@nuxt/fonts",
     "@nuxt/icon",
+    "@nuxt/image",
   ],
   shadcn: {
     prefix: "Ui",
