@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     "@nuxt/fonts",
     "@nuxt/icon",
     "@nuxt/image",
+    "@vee-validate/nuxt",
   ],
   shadcn: {
     prefix: "Ui",

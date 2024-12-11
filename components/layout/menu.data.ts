@@ -15,4 +15,9 @@ export const MENU_DATA: ImenuItem[] = [
     url: "/settings",
     icon: "lucide:settings",
   },
+  {
+    name: "Loader",
+    url: "/loader",
+    icon: "line-md:loading-alt-loop",
+  },
 ];

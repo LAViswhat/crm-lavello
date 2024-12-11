@@ -41,7 +41,7 @@ module.exports = {
         warning: "#8C3B56",
       },
       fontFamily: {
-        sans: ["Lora", "sans-serif"],
+        sans: ["Roboto", "sans-serif"],
       },
     },
   },
