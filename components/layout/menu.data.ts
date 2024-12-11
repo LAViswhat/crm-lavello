@@ -8,7 +8,7 @@ export const MENU_DATA: ImenuItem[] = [
   {
     name: "Home",
     url: "/",
-    icon: "si:dashboard-line",
+    icon: "mage:dashboard",
   },
   {
     name: "Settings",

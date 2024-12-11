@@ -16,7 +16,7 @@ export const buttonVariants = cva(
         secondary:
           "bg-gray-100 text-gray-900 shadow-sm hover:bg-gray-100/80 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-800/80",
         ghost:
-          "text-bg-color-primary hover:text-primary dark:hover:bg-gray-800 dark:hover:text-gray-50",
+          "text-newwhite hover:text-primary dark:hover:bg-gray-800 dark:hover:text-gray-50",
         link: "text-gray-900 underline-offset-4 hover:underline dark:text-gray-50",
       },
       size: {

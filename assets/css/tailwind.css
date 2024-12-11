@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply font-medium text-primary bg-bg-color-primary leading-7;
+    @apply font-medium text-primary bg-newwhite leading-7;
   }
   h1,
   h2,
