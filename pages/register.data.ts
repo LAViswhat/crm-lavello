@@ -3,6 +3,7 @@ export interface IRegisterFormItem {
   type: string;
   placeholder: string;
   icon: string;
+  description?: string;
 }
 
 export const REGISTER_FORM_DATA: IRegisterFormItem[] = [
@@ -23,5 +24,6 @@ export const REGISTER_FORM_DATA: IRegisterFormItem[] = [
     type: "text",
     placeholder: "User name...",
     icon: "octicon:feed-person-16",
+    description: " This is your public display name.",
   },
 ];
