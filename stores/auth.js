@@ -13,6 +13,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const error = ref("");
   const loader = ref(false);
+  const isAuth = ref(false);
 
   const auth = async (payload, type) => {
     const stringURL = type === "signup" ? "signUp" : "signInWithPassword";
@@ -66,5 +67,5 @@ export const useAuthStore = defineStore("auth", () => {
       throw error.value;
     }
   };
-  return { auth, userInfo, error, loader };
+  return { auth, userInfo, error, loader, isAuth };
 });

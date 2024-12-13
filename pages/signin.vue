@@ -37,6 +37,7 @@ const onSubmit = form.handleSubmit(async (values) => {
     },
     "signin"
   );
+  authStore.isAuth = true;
   await router.push("/");
 });
 </script>
