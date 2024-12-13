@@ -70,7 +70,7 @@ const onSubmit = form.handleSubmit(async (values) => {
       class="absolute top-0 left-0 bottom-0 right-0 bg-lime-800 opacity-30 z-0"
     ></div>
     <div
-      class="rounded-md bg-newwhite shadow-md border-secondary w-1/4 px-2 py-4 z-10 relative"
+      class="rounded-md bg-newwhite shadow-md border-secondary w-1/4 max-w-sm px-2 py-4 z-10 relative"
     >
       <header
         class="bg-primary rounded-md flex justify-center items-center w-3/4 absolute top-3 left-2/4 -translate-x-2/4 -translate-y-2/4"
@@ -121,7 +121,7 @@ const onSubmit = form.handleSubmit(async (values) => {
             to="/register"
             @click="authStore.error = ''"
             class="text-primary font-bold underline"
-            >Register</NuxtLink
+            >Create one here</NuxtLink
           >
         </div>
       </form>

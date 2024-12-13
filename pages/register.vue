@@ -81,6 +81,17 @@ const onSubmit = form.handleSubmit(async (values) => {
         @submit="onSubmit"
         class="mt-12 flex flex-col items-center justify-center gap-4 px-4"
       >
+        <div class="text-left text-secondary w-full flex items-center">
+          <Icon name="mingcute:question-line" size="18" class="mb-[2px]" />
+          Already have an account?&nbsp;
+          <NuxtLink
+            to="/signin"
+            @click="authStore.error = ''"
+            class="text-primary font-bold underline"
+          >
+            Log in instead!</NuxtLink
+          >
+        </div>
         <UiFormField
           v-for="item in REGISTER_FORM_DATA"
           :key="item.name"
@@ -115,15 +126,6 @@ const onSubmit = form.handleSubmit(async (values) => {
           class="text-orange"
         />
         <UiButton v-else type="submit"> Get started </UiButton>
-        <div class="mx-auto text-secondary">
-          Are you already registered?
-          <NuxtLink
-            to="/signin"
-            @click="authStore.error = ''"
-            class="text-primary font-bold underline"
-            >Log in then</NuxtLink
-          >
-        </div>
       </form>
     </div>
   </div>
