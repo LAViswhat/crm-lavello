@@ -114,10 +114,13 @@ const onSubmit = form.handleSubmit(async (values) => {
           size="36"
           class="text-orange"
         />
-        <UiButton v-else class="mbtn" type="submit"> Get started </UiButton>
+        <UiButton v-else type="submit"> Get started </UiButton>
         <div class="mx-auto text-secondary">
           Are you already registered?
-          <NuxtLink to="/signin" class="text-primary font-bold underline"
+          <NuxtLink
+            to="/signin"
+            @click="authStore.error = ''"
+            class="text-primary font-bold underline"
             >Log in then</NuxtLink
           >
         </div>
@@ -125,30 +128,3 @@ const onSubmit = form.handleSubmit(async (values) => {
     </div>
   </div>
 </template>
-
-<style scoped>
-/* .mbtn {
-  position: relative;
-}
-.mbtn:hover {
-  transform: translateY(-0.25em);
-}
-.mbtn::before {
-  width: 100%;
-  height: 1em;
-  position: absolute;
-  left: 0;
-  bottom: -0.85em;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(0, 0, 0, 0.35) 0%,
-    rgba(0, 0, 0, 0) 80%
-  );
-  opacity: 0;
-  transition: all 0.3s;
-  content: "";
-}
-.mbtn:hover::before {
-  opacity: 1;
-} */
-</style>

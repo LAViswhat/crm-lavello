@@ -114,10 +114,13 @@ const onSubmit = form.handleSubmit(async (values) => {
           size="36"
           class="text-orange"
         />
-        <UiButton v-else class="mbtn" type="submit"> Let's go </UiButton>
+        <UiButton v-else type="submit"> Let's go </UiButton>
         <div class="mx-auto text-secondary">
           No account yet?
-          <NuxtLink to="/register" class="text-primary font-bold underline"
+          <NuxtLink
+            to="/register"
+            @click="authStore.error = ''"
+            class="text-primary font-bold underline"
             >Register</NuxtLink
           >
         </div>

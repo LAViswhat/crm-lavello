@@ -17,7 +17,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const auth = async (payload, type) => {
     const stringURL = type === "signup" ? "signUp" : "signInWithPassword";
-    error.value = "";
+
     loader.value = true;
     try {
       let response = await axios.post(
@@ -51,7 +51,7 @@ export const useAuthStore = defineStore("auth", () => {
           error.value = "Email not found.";
           break;
         case "INVALID_LOGIN_CREDENTIALS":
-          error.value = "Email or password are wrong.";
+          error.value = "Invalid email or password";
           break;
         case "INVALID_PASSWORD":
           error.value = "Invalid password. Try again.";
@@ -64,6 +64,7 @@ export const useAuthStore = defineStore("auth", () => {
           break;
       }
       loader.value = false;
+      setTimeout(() => (error.value = ""), 2500);
       throw error.value;
     }
   };
