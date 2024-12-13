@@ -35,7 +35,7 @@ const onSubmit = form.handleSubmit(async (values) => {
       password: values.password,
       username: values.username,
     },
-    "signup"
+    "signin"
   );
   await router.push("/");
 });
@@ -69,12 +69,12 @@ const onSubmit = form.handleSubmit(async (values) => {
       class="absolute top-0 left-0 bottom-0 right-0 bg-lime-800 opacity-30 z-0"
     ></div>
     <div
-      class="rounded-md bg-newwhite shadow-md border-secondary w-2/4 px-2 py-4 z-10 relative"
+      class="rounded-md bg-newwhite shadow-md border-secondary w-1/4 px-2 py-4 z-10 relative"
     >
       <header
         class="bg-primary rounded-md flex justify-center items-center w-3/4 absolute top-3 left-2/4 -translate-x-2/4 -translate-y-2/4"
       >
-        <h2 class="text-newwhite capitalize pt-2">Register</h2>
+        <h2 class="text-newwhite capitalize pt-2">Log in</h2>
       </header>
       <form
         @submit="onSubmit"
@@ -113,41 +113,14 @@ const onSubmit = form.handleSubmit(async (values) => {
           size="36"
           class="text-orange"
         />
-        <UiButton v-else class="mbtn" type="submit"> Get started </UiButton>
+        <UiButton v-else class="mbtn" type="submit"> Let's go </UiButton>
         <div class="mx-auto text-secondary">
-          Are you already registered?
-          <NuxtLink to="/signin" class="text-primary font-bold underline"
-            >Log in then</NuxtLink
+          No account yet?
+          <NuxtLink to="/register" class="text-primary font-bold underline"
+            >Register</NuxtLink
           >
         </div>
       </form>
     </div>
   </div>
 </template>
-
-<style scoped>
-/* .mbtn {
-  position: relative;
-}
-.mbtn:hover {
-  transform: translateY(-0.25em);
-}
-.mbtn::before {
-  width: 100%;
-  height: 1em;
-  position: absolute;
-  left: 0;
-  bottom: -0.85em;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(0, 0, 0, 0.35) 0%,
-    rgba(0, 0, 0, 0) 80%
-  );
-  opacity: 0;
-  transition: all 0.3s;
-  content: "";
-}
-.mbtn:hover::before {
-  opacity: 1;
-} */
-</style>
