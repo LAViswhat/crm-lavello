@@ -15,7 +15,7 @@ export const useAuthStore = defineStore("auth", () => {
   const loader = ref(false);
   const isAuth = ref(false);
 
-  const auth = async (payload, type) => {
+  const auth = async (payload: Object, type: string) => {
     const stringURL = type === "signup" ? "signUp" : "signInWithPassword";
 
     loader.value = true;
@@ -35,8 +35,7 @@ export const useAuthStore = defineStore("auth", () => {
         refreshToken: response.data.refreshToken,
         expiresIn: response.data.expiresIn,
       };
-      loader.value = false;
-    } catch (err) {
+    } catch (err: any) {
       switch (err.response.data.error.message) {
         case "EMAIL_EXISTS":
           error.value = "This email already exists";
@@ -63,9 +62,11 @@ export const useAuthStore = defineStore("auth", () => {
           error.value = "Some error";
           break;
       }
-      loader.value = false;
+
       setTimeout(() => (error.value = ""), 2500);
       throw error.value;
+    } finally {
+      loader.value = false;
     }
   };
   return { auth, userInfo, error, loader, isAuth };
