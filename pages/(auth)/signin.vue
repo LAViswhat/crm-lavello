@@ -7,6 +7,11 @@ import { vAutoAnimate } from "@formkit/auto-animate/vue";
 
 import { REGISTER_FORM_DATA } from "./register.data";
 
+definePageMeta({
+  title: "Sign In",
+  layout: "auth-layout",
+});
+
 const formSchema = toTypedSchema(
   z.object({
     email: z
