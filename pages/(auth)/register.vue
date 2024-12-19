@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAuthStore } from "../stores/auth";
+import { useAuthStore } from "../../stores/auth";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
@@ -35,7 +35,7 @@ const onSubmit = form.handleSubmit(async (values) => {
       password: values.password,
       username: values.username,
     },
-    "signin"
+    "signup"
   );
   authStore.isAuth = true;
   await router.push("/");
@@ -70,17 +70,28 @@ const onSubmit = form.handleSubmit(async (values) => {
       class="absolute top-0 left-0 bottom-0 right-0 bg-lime-800 opacity-30 z-0"
     ></div>
     <div
-      class="rounded-md bg-newwhite shadow-md border-secondary w-1/4 max-w-sm px-2 py-4 z-10 relative"
+      class="rounded-md bg-newwhite shadow-md border-secondary w-2/4 px-2 py-4 z-10 relative"
     >
       <header
         class="bg-primary rounded-md flex justify-center items-center w-3/4 absolute top-3 left-2/4 -translate-x-2/4 -translate-y-2/4"
       >
-        <h2 class="text-newwhite capitalize pt-2">Log in</h2>
+        <h2 class="text-newwhite capitalize pt-2">Register</h2>
       </header>
       <form
         @submit="onSubmit"
         class="mt-12 flex flex-col items-center justify-center gap-4 px-4"
       >
+        <div class="text-left text-secondary w-full flex items-center">
+          <Icon name="mingcute:question-line" size="18" class="mb-[2px]" />
+          Already have an account?&nbsp;
+          <NuxtLink
+            to="/signin"
+            @click="authStore.error = ''"
+            class="text-primary font-bold underline"
+          >
+            Log in instead!</NuxtLink
+          >
+        </div>
         <UiFormField
           v-for="item in REGISTER_FORM_DATA"
           :key="item.name"
@@ -114,16 +125,7 @@ const onSubmit = form.handleSubmit(async (values) => {
           size="36"
           class="text-orange"
         />
-        <UiButton v-else type="submit"> Let's go </UiButton>
-        <div class="mx-auto text-secondary">
-          No account yet?
-          <NuxtLink
-            to="/register"
-            @click="authStore.error = ''"
-            class="text-primary font-bold underline"
-            >Create one here</NuxtLink
-          >
-        </div>
+        <UiButton v-else type="submit"> Get started </UiButton>
       </form>
     </div>
   </div>
