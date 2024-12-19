@@ -8,7 +8,6 @@ import { vAutoAnimate } from "@formkit/auto-animate/vue";
 import { REGISTER_FORM_DATA } from "./register.data";
 
 definePageMeta({
-  title: "Sign In",
   layout: "auth-layout",
 });
 
@@ -48,7 +47,7 @@ const onSubmit = form.handleSubmit(async (values) => {
 </script>
 <template>
   <div
-    class="flex flex-col justify-center items-center min-h-screen bg-[url('/reg_bg.jpg')] bg-no-repeat bg-cover relative"
+    class="flex flex-col justify-center items-center min-h-screen bg-[url('/signin_bg.jpg')] bg-no-repeat bg-cover relative"
   >
     <Transition
       enter-active-class="transition-transform duration-300"
@@ -72,7 +71,7 @@ const onSubmit = form.handleSubmit(async (values) => {
       </UiAlert>
     </Transition>
     <div
-      class="absolute top-0 left-0 bottom-0 right-0 bg-lime-800 opacity-30 z-0"
+      class="absolute top-0 left-0 bottom-0 right-0 bg-lime-900 opacity-30 z-0"
     ></div>
     <div
       class="rounded-md bg-newwhite shadow-md border-secondary w-1/4 max-w-sm px-2 py-4 z-10 relative"
