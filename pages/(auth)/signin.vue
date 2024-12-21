@@ -20,7 +20,7 @@ const formSchema = toTypedSchema(
     password: z
       .string()
       .min(1, { message: "This is required" })
-      .min(8, { message: "Too short" }),
+      .min(6, { message: "Too short" }),
     username: z.string(),
   })
 );
@@ -30,19 +30,9 @@ const form = useForm({
 });
 
 const authStore = useAuthStore();
-const router = useRouter();
 
 const onSubmit = form.handleSubmit(async (values) => {
-  await authStore.auth(
-    {
-      email: values.email,
-      password: values.password,
-      username: values.username,
-    },
-    "signin"
-  );
-  authStore.isAuth = true;
-  await router.push("/");
+  await authStore.signIn(values.email, values.password);
 });
 </script>
 <template>
@@ -58,14 +48,14 @@ const onSubmit = form.handleSubmit(async (values) => {
       leave-to-class="-translate-y-full"
     >
       <UiAlert
-        v-if="authStore.error"
+        v-if="authStore.errorMessage"
         variant="destructive"
         class="fixed top-2 left-0 right-0 mx-auto w-1/4 mb-12 bg-orange border-l-8 z-50 shadow-lg"
       >
         <div class="inline-flex gap-1 items-center">
           <Icon name="line-md:alert-loop" size="18" />
           <UiAlertTitle class="text-xl mb-0">{{
-            authStore.error
+            authStore.errorMessage
           }}</UiAlertTitle>
         </div>
       </UiAlert>
@@ -123,7 +113,7 @@ const onSubmit = form.handleSubmit(async (values) => {
           No account yet?
           <NuxtLink
             to="/register"
-            @click="authStore.error = ''"
+            @click="authStore.errorMessage = ''"
             class="text-primary font-bold underline"
             >Create one here</NuxtLink
           >
