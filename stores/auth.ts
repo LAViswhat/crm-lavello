@@ -91,7 +91,7 @@ export const useAuthStore = defineStore("auth", () => {
   const signOut = async () => {
     try {
       await firebaseSignOut(auth);
-      router.push("/signin");
+      await router.push("/signin");
     } catch (error) {
       handleError(error);
       throw error;

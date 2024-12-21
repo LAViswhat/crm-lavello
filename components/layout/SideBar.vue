@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { useAuthStore } from "~/stores/auth";
+import { useLoaderStore } from "@/stores/loader";
 
 const authStore = useAuthStore();
 
+const loaderStore = useLoaderStore();
+const { setLoading } = loaderStore;
+
 const handleSignOut = async () => {
+  setLoading(true);
   await authStore.signOut();
+  setLoading(false);
 };
 </script>
 <template>
