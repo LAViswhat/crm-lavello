@@ -1,73 +1,103 @@
-import axios from "axios";
-
-const API_KEY = import.meta.env.VITE_FIREBASE_API_KEY;
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+  signOut as firebaseSignOut,
+} from "firebase/auth";
+import firebaseApp from "~/plugins/firebase.client";
 
 export const useAuthStore = defineStore("auth", () => {
-  const userInfo = ref({
-    token: "",
-    email: "",
-    userId: "",
-    refreshToken: "",
-    expiresIn: "",
-  });
-
-  const error = ref("");
+  const auth = getAuth(firebaseApp);
+  const router = useRouter();
+  const errorMessage = ref("");
   const loader = ref(false);
   const isAuth = ref(false);
 
-  const auth = async (payload: Object, type: string) => {
-    const stringURL = type === "signup" ? "signUp" : "signInWithPassword";
-
-    loader.value = true;
-    try {
-      let response = await axios.post(
-        `https://identitytoolkit.googleapis.com/v1/accounts:${stringURL}?key=${API_KEY}`,
-        {
-          ...payload,
-          returnSecureToken: true,
-        }
-      );
-      console.log(response.data);
-      userInfo.value = {
-        token: response.data.idToken,
-        email: response.data.email,
-        userId: response.data.localId,
-        refreshToken: response.data.refreshToken,
-        expiresIn: response.data.expiresIn,
-      };
-    } catch (err: any) {
-      switch (err.response.data.error.message) {
-        case "EMAIL_EXISTS":
-          error.value = "This email already exists";
+  const handleError = (error: unknown) => {
+    if (error instanceof Error) {
+      switch (error.message) {
+        case "Firebase: Error (auth/email-already-in-use).":
+          errorMessage.value = "This email already exists";
           break;
-        case "OPERATION_NOT_ALLOWED":
-          error.value = "This operation is not allowed";
+        case "Firebase: Error (auth/invalid-email).":
+          errorMessage.value =
+            "The email address you entered is not valid. Please check the format and try again.";
           break;
-        case "Too_MANY_ATTEMPTS_TRY_LATER":
-          error.value = "Too many attemps. Try again a bit latter";
+        case "Firebase: Error (auth/too-many-requests).":
+          errorMessage.value = "Too many requests. Try again later.";
           break;
-        case "EMAIL_NOT_FOUND":
-          error.value = "Email not found.";
+        case "Firebase: Error (auth/user-not-found).":
+          errorMessage.value = "User not found";
           break;
-        case "INVALID_LOGIN_CREDENTIALS":
-          error.value = "Invalid email or password";
+        case "Firebase: Error (auth/wrong-password).":
+          errorMessage.value = "Incorrect password";
           break;
-        case "INVALID_PASSWORD":
-          error.value = "Invalid password. Try again.";
-          break;
-        case "USER_DISABLED":
-          error.value = "User disabled";
+        case "Firebase: Error (auth/weak-password).":
+          errorMessage.value = "Weak password.";
           break;
         default:
-          error.value = "Some error";
-          break;
+          errorMessage.value = "An unexpected error occurred";
       }
+      setTimeout(() => (errorMessage.value = ""), 2500);
+    }
+  };
 
-      setTimeout(() => (error.value = ""), 2500);
-      throw error.value;
+  const signUp = async (email: string, password: string, username: string) => {
+    loader.value = true;
+
+    try {
+      const userCredentials = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const currentUser = userCredentials.user;
+
+      if (currentUser) {
+        await updateProfile(currentUser, { displayName: username });
+      }
+      isAuth.value = true;
+      await router.push("/");
+      return currentUser;
+    } catch (error) {
+      handleError(error);
+      throw error;
     } finally {
       loader.value = false;
     }
   };
-  return { auth, userInfo, error, loader, isAuth };
+
+  const signIn = async (email: string, password: string) => {
+    loader.value = true;
+
+    try {
+      const userCredentials = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      isAuth.value = true;
+      await router.push("/");
+      return userCredentials.user;
+    } catch (error) {
+      handleError(error);
+      throw error;
+    } finally {
+      loader.value = false;
+    }
+  };
+
+  const signOut = async () => {
+    try {
+      await firebaseSignOut(auth);
+      isAuth.value = false;
+      router.push("/signin");
+    } catch (error) {
+      handleError(error);
+      throw error;
+    }
+  };
+
+  return { errorMessage, loader, isAuth, handleError, signUp, signIn, signOut };
 });
