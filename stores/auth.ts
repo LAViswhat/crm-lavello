@@ -12,7 +12,6 @@ export const useAuthStore = defineStore("auth", () => {
   const router = useRouter();
   const errorMessage = ref("");
   const loader = ref(false);
-  const isAuth = ref(false);
 
   const handleError = (error: unknown) => {
     if (error instanceof Error) {
@@ -60,7 +59,6 @@ export const useAuthStore = defineStore("auth", () => {
       if (currentUser) {
         await updateProfile(currentUser, { displayName: username });
       }
-      isAuth.value = true;
       await router.push("/");
       return currentUser;
     } catch (error) {
@@ -80,7 +78,6 @@ export const useAuthStore = defineStore("auth", () => {
         email,
         password
       );
-      isAuth.value = true;
       await router.push("/");
       return userCredentials.user;
     } catch (error) {
@@ -94,7 +91,6 @@ export const useAuthStore = defineStore("auth", () => {
   const signOut = async () => {
     try {
       await firebaseSignOut(auth);
-      isAuth.value = false;
       router.push("/signin");
     } catch (error) {
       handleError(error);
@@ -102,5 +98,5 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
-  return { errorMessage, loader, isAuth, handleError, signUp, signIn, signOut };
+  return { errorMessage, loader, handleError, signUp, signIn, signOut };
 });
