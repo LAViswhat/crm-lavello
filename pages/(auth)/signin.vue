@@ -21,7 +21,6 @@ const formSchema = toTypedSchema(
       .string()
       .min(1, { message: "This is required" })
       .min(6, { message: "Too short" }),
-    username: z.string(),
   })
 );
 
@@ -81,7 +80,11 @@ const onSubmit = form.handleSubmit(async (values) => {
           v-slot="{ componentField }"
           :name="item.name"
         >
-          <UiFormItem v-auto-animate class="w-full">
+          <UiFormItem
+            v-show="item.name !== 'username'"
+            v-auto-animate
+            class="w-full"
+          >
             <div class="inline-flex items-center gap-2 w-full">
               <UiFormLabel>
                 <Icon :name="item.icon" size="24" />
