@@ -1,12 +1,21 @@
 <script setup lang="ts">
-import { useAuthStore } from "../stores/auth";
+import { getAuth, onAuthStateChanged, type User } from "firebase/auth";
 
-const authStore = useAuthStore();
+const auth = getAuth();
+const currentUser = ref<User | null>(null);
+onMounted(() => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("User is logged in:", user);
+      currentUser.value = user;
+    }
+  });
+});
 </script>
 <template>
   <div class="flex flex-row h-screen">
-    <LayoutSideBar v-if="authStore.isAuth" class="basis-1/6"></LayoutSideBar>
-    <main :class="authStore.isAuth ? 'basis-5/6' : 'basis-full'">
+    <LayoutSideBar v-if="currentUser" class="basis-1/6"></LayoutSideBar>
+    <main :class="currentUser ? 'basis-5/6' : 'basis-full'">
       <slot></slot>
     </main>
   </div>
