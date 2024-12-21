@@ -33,6 +33,9 @@ export const useAuthStore = defineStore("auth", () => {
         case "Firebase: Error (auth/wrong-password).":
           errorMessage.value = "Incorrect password";
           break;
+        case "Firebase: Error (auth/invalid-credential).":
+          errorMessage.value = "Wrong email or password";
+          break;
         case "Firebase: Error (auth/weak-password).":
           errorMessage.value = "Weak password.";
           break;
