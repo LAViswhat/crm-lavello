@@ -1,8 +1,4 @@
-<script setup lang="ts">
-definePageMeta({
-  layout: "auth-layout",
-});
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="h-full flex items-center justify-center bg-newblack">
