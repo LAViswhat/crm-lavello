@@ -35,9 +35,9 @@ module.exports = {
       },
       colors: {
         newwhite: "#f6f6f6",
+        newblack: "#212121",
         primary: "#377C53",
-        secondary: "#212121",
-        orange: "#F3C277",
+        secondary: "#F3C277",
         warning: "#8C3B56",
       },
       fontFamily: {
