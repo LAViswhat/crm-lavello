@@ -59,7 +59,7 @@ export const useAuthStore = defineStore("auth", () => {
       if (currentUser) {
         await updateProfile(currentUser, { displayName: username });
       }
-      await router.push("/");
+      await router.push("/dashboard");
       return currentUser;
     } catch (error) {
       handleError(error);
@@ -78,7 +78,7 @@ export const useAuthStore = defineStore("auth", () => {
         email,
         password
       );
-      await router.push("/");
+      await router.push("/dashboard");
       return userCredentials.user;
     } catch (error) {
       handleError(error);
