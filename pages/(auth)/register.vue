@@ -50,7 +50,7 @@ const onSubmit = form.handleSubmit(async (values) => {
       <UiAlert
         v-if="authStore.errorMessage"
         variant="destructive"
-        class="fixed top-2 left-0 right-0 mx-auto w-1/4 mb-12 bg-orange border-l-8 z-50 shadow-lg"
+        class="fixed top-2 left-0 right-0 mx-auto w-1/4 mb-12 bg-secondary border-l-8 z-50 shadow-lg"
       >
         <div class="inline-flex gap-1 items-center">
           <Icon name="line-md:alert-loop" size="18" />
@@ -64,7 +64,7 @@ const onSubmit = form.handleSubmit(async (values) => {
       class="absolute top-0 left-0 bottom-0 right-0 bg-lime-800 opacity-30 z-0"
     ></div>
     <div
-      class="rounded-md bg-newwhite shadow-md border-secondary w-2/4 px-2 py-4 z-10 relative"
+      class="rounded-md bg-newwhite shadow-md border-newblack w-2/4 px-2 py-4 z-10 relative"
     >
       <header
         class="bg-primary rounded-md flex justify-center items-center w-3/4 absolute top-3 left-2/4 -translate-x-2/4 -translate-y-2/4"
@@ -75,7 +75,7 @@ const onSubmit = form.handleSubmit(async (values) => {
         @submit="onSubmit"
         class="mt-12 flex flex-col items-center justify-center gap-4 px-4"
       >
-        <div class="text-left text-secondary w-full flex items-center">
+        <div class="text-left text-newblack w-full flex items-center">
           <Icon name="mingcute:question-line" size="18" class="mb-[2px]" />
           Already have an account?&nbsp;
           <NuxtLink
@@ -117,9 +117,11 @@ const onSubmit = form.handleSubmit(async (values) => {
           v-if="authStore.loader"
           name="line-md:loading-alt-loop"
           size="36"
-          class="text-orange"
+          class="text-secondary"
         />
-        <UiButton v-else type="submit"> Get started </UiButton>
+        <UiButton variant="outline" v-else type="submit">
+          Get started
+        </UiButton>
       </form>
     </div>
   </div>
