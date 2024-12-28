@@ -15,7 +15,7 @@ const handleSignOut = async () => {
 </script>
 <template>
   <aside class="px-5 py-8 bg-newblack h-full w-full relative">
-    <UiButton variant="ghost" class="absolute top-2 right-1">
+    <UiButton variant="ghost" size="sm" class="absolute top-2 right-1">
       <Icon name="line-md:logout" size="24" @click="handleSignOut" />
     </UiButton>
     <NuxtLink to="/">
