@@ -8,5 +8,18 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
+
 const firebaseApp = initializeApp(firebaseConfig);
-export default firebaseApp;
+
+export default defineNuxtPlugin(() => {
+  if (import.meta.client) {
+    // Проверка чтоб этот плагин загружался только на клинтской стороне
+    return {
+      provide: {
+        firebaseApp,
+      },
+    };
+  }
+});
+
+export { firebaseApp };

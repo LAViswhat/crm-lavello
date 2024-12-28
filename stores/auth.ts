@@ -4,11 +4,24 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
   signOut as firebaseSignOut,
+  onAuthStateChanged,
+  type User,
 } from "firebase/auth";
-import firebaseApp from "~/plugins/firebase.client";
+import { firebaseApp } from "~/plugins/firebase.client";
+import { useNuxtApp } from "#app";
+
+interface DecodedToken {
+  uid: string;
+  email?: string;
+  emailVerified?: boolean;
+  name?: string;
+  picture?: string;
+}
 
 export const useAuthStore = defineStore("auth", () => {
   const auth = getAuth(firebaseApp);
+  const isAuthenticated = ref(false);
+  const currentUser = ref<DecodedToken | null>(null);
   const router = useRouter();
   const errorMessage = ref("");
   const loader = ref(false);
@@ -78,6 +91,7 @@ export const useAuthStore = defineStore("auth", () => {
         email,
         password
       );
+      console.log("Redirecting to dashboard");
       await router.push("/dashboard");
       return userCredentials.user;
     } catch (error) {
@@ -98,5 +112,38 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
-  return { errorMessage, loader, handleError, signUp, signIn, signOut };
+  // Инициализация авторизации на сервере или клиенте
+  const initAuth = async () => {
+    const { $adminAuth } = useNuxtApp(); // Получаем Admin SDK из плагина
+    const token = useCookie("auth").value;
+
+    if (!token) {
+      isAuthenticated.value = false;
+      currentUser.value = null;
+      return;
+    }
+
+    try {
+      // Проверяем токен с помощью Firebase Admin SDK
+      const decodeToken = await $adminAuth.verifyIdToken(token);
+      isAuthenticated.value = true;
+      currentUser.value = decodeToken; // decodedToken содержит информацию о пользователе
+    } catch (error) {
+      console.error("Token verification failed:", error);
+      isAuthenticated.value = false;
+      currentUser.value = null;
+    }
+  };
+
+  return {
+    isAuthenticated,
+    currentUser,
+    errorMessage,
+    loader,
+    handleError,
+    signUp,
+    signIn,
+    signOut,
+    initAuth,
+  };
 });

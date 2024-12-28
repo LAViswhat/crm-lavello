@@ -68,7 +68,7 @@ const onSubmit = form.handleSubmit(async (values) => {
         <h2 class="text-newwhite capitalize pt-2">Register</h2>
       </header>
       <form
-        @submit="onSubmit"
+        @submit.prevent="onSubmit"
         class="mt-12 flex flex-col items-center justify-center gap-4 px-4"
       >
         <div class="text-left text-newblack w-full flex items-center">

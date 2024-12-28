@@ -10,12 +10,12 @@
         CRM - for something I'll figure out later!
       </h4>
       <div class="w-full pl-2 flex gap-2">
-        <UiButton size="lg">
-          <NuxtLink to="/register">Register</NuxtLink>
-        </UiButton>
-        <UiButton variant="outline" size="lg">
-          <NuxtLink to="/signin">Sign In</NuxtLink>
-        </UiButton>
+        <NuxtLink to="/register"
+          ><UiButton size="lg"> Register </UiButton></NuxtLink
+        >
+        <NuxtLink to="/signin"
+          ><UiButton variant="outline" size="lg"> Sign In </UiButton></NuxtLink
+        >
       </div>
     </div>
     <div class="mr-12">
