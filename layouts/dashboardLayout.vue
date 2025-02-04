@@ -1,29 +1,24 @@
 <script setup lang="ts">
-import { getAuth, onAuthStateChanged, type User } from "firebase/auth";
 import { useLoaderStore } from "@/stores/loader";
+import { useAuthStore } from "@/stores/auth";
 
 const loaderStore = useLoaderStore();
+const authStore = useAuthStore();
 
-const auth = getAuth();
-const currentUser = ref<User | null>(null);
-
-onMounted(() => {
+onMounted(async () => {
   loaderStore.setLoading(true);
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log("User is logged in:", user);
-      currentUser.value = user;
-      loaderStore.setLoading(false);
-    }
-  });
+  loaderStore.setLoading(false);
 });
 </script>
 <template>
   <div class="flex flex-row h-screen">
     <LayoutLoader v-if="loaderStore.isLoading" />
     <template v-else>
-      <LayoutSideBar v-if="currentUser" class="basis-1/6"></LayoutSideBar>
-      <main :class="currentUser ? 'basis-5/6' : 'basis-full'">
+      <LayoutSideBar
+        v-if="authStore.isAuthenticated"
+        class="basis-1/6"
+      ></LayoutSideBar>
+      <main :class="authStore.isAuthenticated ? 'basis-5/6' : 'basis-full'">
         <slot></slot>
       </main>
     </template>
