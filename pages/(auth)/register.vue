@@ -17,7 +17,7 @@ const formSchema = toTypedSchema(
       .string()
       .min(1, { message: "This is required" })
       .min(6, { message: "Too short" }),
-    username: z.string(),
+    username: z.string().optional(),
   })
 );
 
@@ -28,7 +28,8 @@ const form = useForm({
 const authStore = useAuthStore();
 
 const onSubmit = form.handleSubmit(async (values) => {
-  await authStore.signUp(values.email, values.password, values.username);
+  const username = values.username || "";
+  await authStore.signUp(values.email, values.password, username);
 });
 </script>
 <template>
