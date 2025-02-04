@@ -9,7 +9,7 @@
       <h4 class="text-2xl pl-2 tracking-wider">
         CRM - for something I'll figure out later!
       </h4>
-      <div class="w-full pl-2 flex gap-2">
+      <div class="w-full pl-2 flex flex-col md:flex-row gap-2">
         <UiButton as-child size="lg">
           <NuxtLink to="/register">Register</NuxtLink>
         </UiButton>
@@ -18,7 +18,7 @@
         </UiButton>
       </div>
     </div>
-    <div class="mr-12">
+    <div class="md:block hidden">
       <NuxtImg src="/thmb_banner.png" width="480" />
     </div>
   </div>
