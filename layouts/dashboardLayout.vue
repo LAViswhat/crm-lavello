@@ -12,10 +12,12 @@ onMounted(async () => {
   <div class="flex flex-row h-screen">
     <LayoutLoader v-if="loaderStore.isLoading" />
     <template v-else>
-      <LayoutSideBar class="basis-1/6"></LayoutSideBar>
-      <main class="'basis-5/6">
-        <slot></slot>
-      </main>
+      <LayoutNavigationSideBar class="basis-1/6"></LayoutNavigationSideBar>
+      <div class="basis-5/6">
+        <main>
+          <slot></slot>
+        </main>
+      </div>
     </template>
   </div>
 </template>

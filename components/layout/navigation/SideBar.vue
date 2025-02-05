@@ -14,17 +14,13 @@ const handleSignOut = async () => {
 };
 </script>
 <template>
-  <aside class="px-5 py-8 bg-newblack h-full w-full relative">
+  <aside class="px-5 py-6 bg-newblack h-full w-full relative">
     <UiButton variant="ghost" size="sm" class="absolute top-2 right-1">
       <Icon name="line-md:logout" size="24" @click="handleSignOut" />
     </UiButton>
     <NuxtLink to="/">
-      <NuxtImg
-        src="/logo.png"
-        width="160"
-        class="absolute top-2 left-2"
-      ></NuxtImg>
+      <NuxtImg src="/logo.png" width="160"></NuxtImg>
     </NuxtLink>
-    <LayoutSideBar__Menu class="mt-44" />
+    <LayoutNavigationSideBar__Menu class="mt-12" />
   </aside>
 </template>
