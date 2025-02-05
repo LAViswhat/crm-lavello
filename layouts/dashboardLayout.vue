@@ -14,6 +14,7 @@ onMounted(async () => {
     <template v-else>
       <LayoutNavigationSideBar class="basis-1/6"></LayoutNavigationSideBar>
       <div class="basis-5/6">
+        <LayoutNavigationHeader></LayoutNavigationHeader>
         <main>
           <slot></slot>
         </main>
