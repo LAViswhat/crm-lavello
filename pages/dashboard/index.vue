@@ -6,7 +6,10 @@ definePageMeta({
 </script>
 <template>
   <div class="p-10">
-    <h1>HELLO</h1>
+    <UiButton variant="outline" size="md">
+      <Icon name="line-md:plus-circle-filled" size="36" class="text-primary" />
+      <span>Create new board</span>
+    </UiButton>
   </div>
 </template>
 
