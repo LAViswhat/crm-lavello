@@ -10,11 +10,11 @@ export const buttonVariants = cva(
         default:
           "bg-primary text-gray-50 shadow  hover:text-secondary dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90",
         destructive:
-          "bg-red-500 text-gray-50 shadow-sm hover:bg-red-500/90 dark:bg-red-900 dark:text-gray-50 dark:hover:bg-red-900/90",
+          "bg-warning text-gray-50 shadow-sm hover:bg-warning/90 dark:bg-red-900 dark:text-gray-50 dark:hover:bg-red-900/90",
         outline:
           "border-2 border-primary bg-white shadow-sm hover:bg-gray-100 hover:text-secondary dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50",
         secondary:
-          "bg-gray-100 text-gray-900 shadow-sm hover:bg-gray-100/80 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-800/80",
+          "bg-gray-200 text-newblack shadow-sm hover:text-primary hover:bg-gray-200/70 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-800/80",
         ghost:
           "text-newwhite hover:text-primary dark:hover:bg-gray-800 dark:hover:text-gray-50",
         link: "text-gray-900 underline-offset-4 hover:underline dark:text-gray-50",
