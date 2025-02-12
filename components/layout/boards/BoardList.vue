@@ -11,7 +11,8 @@ const boardList = computed(() => boardStore.boards);
 <template>
   <LayoutLoader v-if="boardStore.loader" />
   <div v-else class="flex flex-row flex-wrap gap-4">
-    <div v-for="board in boardList" class="flex flex-row flex-wrap gap-4">
+    <LayoutBoardsBoardDialog />
+    <div v-for="board in boardList">
       <LayoutBoardsBoardCard :key="board.boardId">
         <h4 class="pt-2">{{ board.boardName }}</h4>
         <p class="text-sm text-gray-500">
@@ -19,7 +20,6 @@ const boardList = computed(() => boardStore.boards);
         </p>
       </LayoutBoardsBoardCard>
     </div>
-    <LayoutBoardsBoardDialog />
   </div>
 </template>
 

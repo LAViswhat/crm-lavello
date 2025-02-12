@@ -36,7 +36,7 @@ const onSubmit = form.handleSubmit((values) => {
       <UiButton
         variant="outline"
         size="md"
-        class="min-h-40 min-w-60 focus-visible:ring-offset-0 focus-visible:ring-transparent"
+        class="min-h-40 min-w-60 border-0 shadow-xl focus-visible:ring-offset-0 focus-visible:ring-transparent"
       >
         <Icon
           name="line-md:plus-circle-filled"
