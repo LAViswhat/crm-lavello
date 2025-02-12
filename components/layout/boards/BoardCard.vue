@@ -17,18 +17,35 @@
       </UiTooltip>
     </UiTooltipProvider>
 
-    <UiTooltipProvider>
-      <UiTooltip>
-        <UiTooltipTrigger
-          as-child
-          class="absolute top-full right-0 -translate-x-1 -translate-y-[120%] text-gray-500 cursor-pointer"
-          ><Icon name="bi:trash2-fill" size="18"
-        /></UiTooltipTrigger>
-        <UiTooltipContent>
-          <p class="m-0">Remove board</p>
-        </UiTooltipContent>
-      </UiTooltip>
-    </UiTooltipProvider>
+    <UiAlertDialog>
+      <UiAlertDialogTrigger
+        ><UiTooltipProvider>
+          <UiTooltip>
+            <UiTooltipTrigger
+              as-child
+              class="absolute top-full right-0 -translate-x-1 -translate-y-[120%] text-gray-500 cursor-pointer"
+              ><Icon name="bi:trash2-fill" size="18"
+            /></UiTooltipTrigger>
+            <UiTooltipContent>
+              <p class="m-0">Remove board</p>
+            </UiTooltipContent>
+          </UiTooltip>
+        </UiTooltipProvider></UiAlertDialogTrigger
+      >
+      <UiAlertDialogContent>
+        <UiAlertDialogHeader>
+          <UiAlertDialogTitle>Are you absolutely sure?</UiAlertDialogTitle>
+          <UiAlertDialogDescription>
+            This action cannot be undone. This will permanently delete this
+            board and remove your data from our servers.
+          </UiAlertDialogDescription>
+        </UiAlertDialogHeader>
+        <UiAlertDialogFooter>
+          <UiAlertDialogCancel>Cancel</UiAlertDialogCancel>
+          <UiAlertDialogActions>Remove</UiAlertDialogActions>
+        </UiAlertDialogFooter>
+      </UiAlertDialogContent>
+    </UiAlertDialog>
 
     <slot />
   </div>
