@@ -10,7 +10,7 @@ import { BOARD_CREATION_FORM_DATA } from "./boardDialog.data";
 
 const formSchema = toTypedSchema(
   z.object({
-    name: z.string().min(1, { message: "Field is required" }),
+    name: z.string().trim().min(1, { message: "Field is required" }),
     description: z.string().optional(),
   })
 );
