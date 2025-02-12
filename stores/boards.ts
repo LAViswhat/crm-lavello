@@ -7,6 +7,7 @@ import {
   query,
   orderBy,
   getDocs,
+  deleteDoc,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 
@@ -70,5 +71,16 @@ export const useBoardsStore = defineStore("boards", () => {
     }
   };
 
-  return { loader, createBoard, getBoards, boards };
+  const removeBoard = async (boardId: string): Promise<void> => {
+    if (!userId) return;
+
+    try {
+      await deleteDoc(doc(db, "users", `${userId}`, "boards", boardId));
+      await getBoards();
+    } catch (e) {
+      console.error("Error removing document: ", e);
+    }
+  };
+
+  return { loader, createBoard, getBoards, boards, removeBoard };
 });

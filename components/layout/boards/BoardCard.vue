@@ -1,4 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useBoardsStore } from "~/stores/boards";
+
+const boardStore = useBoardsStore();
+const props = defineProps<{
+  boardId: string;
+}>();
+</script>
 
 <template>
   <div
@@ -42,7 +49,9 @@
         </UiAlertDialogHeader>
         <UiAlertDialogFooter>
           <UiAlertDialogCancel>Cancel</UiAlertDialogCancel>
-          <UiAlertDialogActions>Remove</UiAlertDialogActions>
+          <UiAlertDialogAction @click="boardStore.removeBoard(props.boardId)"
+            >Remove</UiAlertDialogAction
+          >
         </UiAlertDialogFooter>
       </UiAlertDialogContent>
     </UiAlertDialog>
