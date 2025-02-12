@@ -6,7 +6,7 @@ definePageMeta({
 </script>
 <template>
   <div class="p-10">
-    <LayoutBoardsBoardDialog />
+    <LayoutBoardsBoardList />
   </div>
 </template>
 
