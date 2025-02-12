@@ -12,12 +12,12 @@ export const MENU_DATA: ImenuItem[] = [
   },
   {
     name: "Settings",
-    url: "/settings",
+    url: "/",
     icon: "lucide:settings",
   },
   {
     name: "Loader",
-    url: "/loader",
+    url: "/",
     icon: "line-md:loading-alt-loop",
   },
 ];
