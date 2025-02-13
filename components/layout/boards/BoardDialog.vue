@@ -21,13 +21,18 @@ const form = useForm({
 
 const boardStore = useBoardsStore();
 const nameField = ref("");
+const selectedGradient = ref("");
 
 const disabledCreateBtn = computed<boolean>(() => {
   return !nameField.value;
 });
 
 const onSubmit = form.handleSubmit((values) => {
-  boardStore.createBoard(values.name, values.description);
+  boardStore.createBoard(
+    values.name,
+    values.description,
+    selectedGradient.value
+  );
 });
 </script>
 <template>
@@ -85,6 +90,7 @@ const onSubmit = form.handleSubmit((values) => {
             <UiFormMessage class="ml-8 !mt-1" />
           </UiFormItem>
         </UiFormField>
+        <LayoutGradientPicker @select-gradient="selectedGradient = $event" />
         <Icon
           v-if="boardStore.loader"
           name="line-md:loading-alt-loop"

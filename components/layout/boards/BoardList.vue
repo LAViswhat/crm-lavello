@@ -13,8 +13,17 @@ const boardList = computed(() => boardStore.boards);
   <div v-else class="flex flex-row flex-wrap gap-4">
     <LayoutBoardsBoardDialog />
     <div v-for="board in boardList">
-      <LayoutBoardsBoardCard :boardId="board.boardId" :key="board.boardId">
-        <h4 class="pt-2">{{ board.boardName }}</h4>
+      <LayoutBoardsBoardCard
+        :boardId="board.boardId"
+        :key="board.boardId"
+        :style="{ 'background-image': board.gradient }"
+      >
+        <h4
+          class="pt-2"
+          :class="[board.gradient ? 'text-gray-200' : 'text-primary']"
+        >
+          {{ board.boardName }}
+        </h4>
         <p class="text-sm text-gray-500">
           {{ board.boardDescription }}
         </p>

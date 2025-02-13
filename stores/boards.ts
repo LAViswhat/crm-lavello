@@ -15,6 +15,7 @@ export interface IBoard {
   boardId: string;
   boardName: string;
   boardDescription: string | "";
+  gradient: string;
   createdAt: Date;
 }
 
@@ -27,13 +28,15 @@ export const useBoardsStore = defineStore("boards", () => {
 
   const createBoard = async (
     name: string,
-    desc: string | undefined
+    desc: string | undefined,
+    gradient: string
   ): Promise<void> => {
     loader.value = true;
     const payload: IBoard = {
       boardId: uuidv4(),
       boardName: name,
       boardDescription: desc ?? "",
+      gradient: gradient,
       createdAt: new Date(),
     };
     try {
