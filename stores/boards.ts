@@ -66,7 +66,13 @@ export const useBoardsStore = defineStore("boards", () => {
 
       const docsList = await getDocs(getData);
 
-      boards.value = docsList.docs.map((doc) => doc.data() as IBoard);
+      boards.value = docsList.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          ...data,
+          createdAt: data.createdAt.toDate(),
+        } as IBoard;
+      });
     } catch (e) {
       console.error("Error fetching boards:", e);
     } finally {

@@ -9,7 +9,7 @@ const props = defineProps<{
 
 <template>
   <div
-    class="relative min-h-40 h-40 min-w-60 w-60 overflow-hidden p-2 flex flex-col items-start justify-start gap-2 rounded-lg text-lg font-medium ring-offset-white transition-colors focus-visible:outline-none duration-500 shadow-xl dark:border-gray-800 dark:bg-gray-950"
+    class="relative h-32 w-60 overflow-hidden p-2 flex flex-col items-start justify-start gap-2 rounded-lg text-lg font-medium ring-offset-white transition-colors focus-visible:outline-none duration-500 shadow-xl dark:border-gray-800 dark:bg-gray-950"
   >
     <UiTooltipProvider>
       <UiTooltip>
