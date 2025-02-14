@@ -41,11 +41,11 @@ const onSubmit = form.handleSubmit((values) => {
       <UiButton
         variant="outline"
         size="md"
-        class="min-h-32x min-w-60 border-0 shadow-xl focus-visible:ring-offset-0 focus-visible:ring-transparent"
+        class="min-h-32 min-w-60 border-0 shadow-xl focus-visible:ring-offset-0 focus-visible:ring-transparent"
       >
         <Icon
-          name="line-md:plus-circle-filled"
-          size="36"
+          name="fluent:slide-add-32-regular"
+          size="32"
           class="text-primary"
         />
         <span>Create new board</span>

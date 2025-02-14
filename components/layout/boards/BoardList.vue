@@ -24,7 +24,7 @@ const formatDate = (date: Date) => {
   <div v-else class="flex flex-row flex-wrap gap-4">
     <LayoutBoardsBoardDialog />
     <div v-for="board in boardList">
-      <UiHoverCard>
+      <UiHoverCard :openDelay="150">
         <UiHoverCardTrigger as-child>
           <LayoutBoardsBoardCard
             :boardId="board.boardId"
