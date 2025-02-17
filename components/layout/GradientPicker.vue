@@ -10,10 +10,10 @@ const gradients = [
   "linear-gradient(90deg, hsla(22, 94%, 79%, 1) 0%, hsla(40, 63%, 85%, 1) 100%)",
   "linear-gradient(90deg, hsla(50, 57%, 47%, 1) 0%, rgb(247, 210, 103) 100%)",
 ];
-
-const selectedGradient = ref("");
-
+const props = defineProps<{ selectedGradient: string }>();
 const emit = defineEmits(["select-gradient"]);
+
+const selectedGradient = ref(props.selectedGradient);
 
 const selectGradient = (gradient: string) => {
   selectedGradient.value = gradient;
@@ -29,7 +29,7 @@ const selectGradient = (gradient: string) => {
         v-for="(gradient, index) in gradients"
         :key="index"
         class="w-14 h-12 rounded-lg cursor-pointer duration-200 hover:scale-[1.1]"
-        :class="{ 'border-slate-400 border-4': gradient === selectedGradient }"
+        :class="{ 'border-primary border-4': gradient === selectedGradient }"
         :style="{ 'background-image': gradient }"
         @click="selectGradient(gradient)"
       ></div>
