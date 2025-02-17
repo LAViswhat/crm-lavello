@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { useBoardsStore } from "@/stores/boards";
 
+const boardStore = useBoardsStore();
+const boardList = computed(() => boardStore.boards);
+
 onMounted(async () => {
   await boardStore.getBoards();
 });
-
-const boardStore = useBoardsStore();
-const boardList = computed(() => boardStore.boards);
 
 // Функция для форматирования даты
 const formatDate = (date: Date) => {
@@ -22,7 +22,22 @@ const formatDate = (date: Date) => {
 <template>
   <LayoutLoader v-if="boardStore.loader" />
   <div v-else class="flex flex-row flex-wrap gap-4">
-    <LayoutBoardsBoardDialog />
+    <LayoutBoardsBoardDialog mode="create">
+      <template #trigger>
+        <UiButton
+          variant="outline"
+          size="md"
+          class="min-h-32 min-w-60 border-0 shadow-xl focus-visible:ring-offset-0 focus-visible:ring-transparent"
+        >
+          <Icon
+            name="fluent:slide-add-32-regular"
+            size="32"
+            class="text-primary"
+          />
+          <span>Create new board</span>
+        </UiButton>
+      </template>
+    </LayoutBoardsBoardDialog>
     <div v-for="board in boardList">
       <UiHoverCard :openDelay="150">
         <UiHoverCardTrigger as-child>

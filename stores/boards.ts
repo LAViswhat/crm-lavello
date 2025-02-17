@@ -7,6 +7,8 @@ import {
   query,
   orderBy,
   getDocs,
+  getDoc,
+  updateDoc,
   deleteDoc,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
@@ -15,7 +17,7 @@ export interface IBoard {
   boardId: string;
   boardName: string;
   boardDescription: string | "";
-  gradient: string;
+  gradient: string | "";
   createdAt: Date;
 }
 
@@ -29,14 +31,14 @@ export const useBoardsStore = defineStore("boards", () => {
   const createBoard = async (
     name: string,
     desc: string | undefined,
-    gradient: string
+    gradient: string | undefined
   ): Promise<void> => {
     loader.value = true;
     const payload: IBoard = {
       boardId: uuidv4(),
       boardName: name,
       boardDescription: desc ?? "",
-      gradient: gradient,
+      gradient: gradient ?? "",
       createdAt: new Date(),
     };
     try {
@@ -80,6 +82,41 @@ export const useBoardsStore = defineStore("boards", () => {
     }
   };
 
+  const getBoard = async (boardId: string): Promise<IBoard | null> => {
+    if (!userId) return null;
+
+    const docRef = doc(db, "users", `${userId}`, "boards", boardId);
+
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data() as IBoard;
+    } else {
+      return null;
+    }
+  };
+
+  const updateBoard = async (
+    boardId: string,
+    name: string,
+    description: string | undefined,
+    gradient: string | undefined
+  ): Promise<void> => {
+    try {
+      if (userId) {
+        await updateDoc(doc(db, "users", `${userId}`, "boards", boardId), {
+          boardName: name,
+          boardDescription: description ?? "",
+          gradient: gradient ?? "",
+          editedAt: new Date(),
+        });
+
+        await getBoards();
+      }
+    } catch (e) {
+      console.error("Error updating document: ", e);
+    }
+  };
+
   const removeBoard = async (boardId: string): Promise<void> => {
     if (!userId) return;
 
@@ -91,5 +128,13 @@ export const useBoardsStore = defineStore("boards", () => {
     }
   };
 
-  return { loader, createBoard, getBoards, boards, removeBoard };
+  return {
+    loader,
+    createBoard,
+    getBoards,
+    getBoard,
+    boards,
+    updateBoard,
+    removeBoard,
+  };
 });

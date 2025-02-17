@@ -19,43 +19,69 @@ const form = useForm({
   validationSchema: formSchema,
 });
 
+const props = defineProps<{
+  mode: "create" | "edit";
+  boardId?: string;
+}>();
+
 const boardStore = useBoardsStore();
-const nameField = ref("");
-const selectedGradient = ref("");
+const boardData = ref<{
+  boardName: string;
+  boardDescription?: string;
+  gradient?: string;
+} | null>(null);
+const nameField = ref(boardData.value?.boardName || "");
+const descriptionField = ref(boardData.value?.boardDescription || "");
+const selectedGradient = ref(boardData.value?.gradient || "");
+
+onMounted(async () => {
+  if (props.mode === "edit" && props.boardId) {
+    boardData.value = await boardStore.getBoard(props.boardId);
+
+    if (boardData.value) {
+      nameField.value = boardData.value.boardName;
+      descriptionField.value = boardData.value.boardDescription || "";
+      selectedGradient.value = boardData.value.gradient || "";
+
+      form.setValues({
+        name: boardData.value.boardName,
+        description: boardData.value.boardDescription,
+      });
+    }
+  }
+});
 
 const disabledCreateBtn = computed<boolean>(() => {
   return !nameField.value;
 });
 
-const onSubmit = form.handleSubmit((values) => {
-  boardStore.createBoard(
-    values.name,
-    values.description,
-    selectedGradient.value
-  );
+const onSubmit = form.handleSubmit(async (values) => {
+  if (props.mode === "edit" && props.boardId) {
+    await boardStore.updateBoard(
+      props.boardId,
+      values.name,
+      values.description,
+      selectedGradient.value
+    );
+  } else {
+    await boardStore.createBoard(
+      values.name,
+      values.description,
+      selectedGradient.value
+    );
+  }
 });
 </script>
 <template>
   <UiDialog>
-    <UiDialogTrigger as-child>
-      <UiButton
-        variant="outline"
-        size="md"
-        class="min-h-32 min-w-60 border-0 shadow-xl focus-visible:ring-offset-0 focus-visible:ring-transparent"
-      >
-        <Icon
-          name="fluent:slide-add-32-regular"
-          size="32"
-          class="text-primary"
-        />
-        <span>Create new board</span>
-      </UiButton>
+    <UiDialogTrigger>
+      <slot name="trigger" />
     </UiDialogTrigger>
     <UiDialogContent class="sm:max-w-[425px]">
       <UiDialogHeader>
-        <UiDialogTitle class="normal-case text-newblack"
-          >Create new board</UiDialogTitle
-        >
+        <UiDialogTitle class="normal-case text-newblack">{{
+          props.mode === "create" ? "Create new board" : "Edit board"
+        }}</UiDialogTitle>
       </UiDialogHeader>
       <form
         @submit="onSubmit"
@@ -84,13 +110,17 @@ const onSubmit = form.handleSubmit((values) => {
                   v-else
                   :placeholder="item.placeholder"
                   v-bind="componentField"
+                  v-model="descriptionField"
                 ></Textarea>
               </UiFormControl>
             </div>
             <UiFormMessage class="ml-8 !mt-1" />
           </UiFormItem>
         </UiFormField>
-        <LayoutGradientPicker @select-gradient="selectedGradient = $event" />
+        <LayoutGradientPicker
+          v-model:selectedGradient="selectedGradient"
+          @select-gradient="selectedGradient = $event"
+        />
         <Icon
           v-if="boardStore.loader"
           name="line-md:loading-alt-loop"
@@ -102,7 +132,7 @@ const onSubmit = form.handleSubmit((values) => {
           :variant="disabledCreateBtn ? 'disabled' : 'default'"
           type="submit"
         >
-          Create
+          {{ props.mode === "create" ? "Create" : "Save changes" }}
         </UiButton>
       </form>
     </UiDialogContent>
