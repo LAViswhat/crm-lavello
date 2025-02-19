@@ -4,7 +4,7 @@
   <div class="h-full flex items-center justify-center bg-newblack">
     <div class="mx-4 flex flex-col items-end">
       <div class="w-full">
-        <NuxtImg src="/logo.png" width="240" />
+        <NuxtImg src="/main_logo.png" width="240" />
       </div>
       <h4 class="text-2xl pl-2 tracking-wider">
         CRM - for something I'll figure out later!

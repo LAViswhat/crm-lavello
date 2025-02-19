@@ -14,9 +14,13 @@ const handleSignOut = async () => {
 };
 </script>
 <template>
-  <aside class="px-5 py-6 bg-newblack h-full w-full relative">
-    <NuxtLink to="/">
-      <NuxtImg src="/logo.png" width="160"></NuxtImg>
+  <aside class="px-5 pt-2 pb-6 bg-newblack h-full w-full relative">
+    <NuxtLink
+      to="/"
+      class="flex items-center gap-4 text-newwhite capitalize font-bold duration-300 hover:text-[#1b9b4f] py-2 px-4 mb-4 w-full"
+    >
+      <NuxtImg src="/mini_logo.png" class="w-14 h-auto"></NuxtImg>
+      <span class="text-secondary text-3xl">LAVello</span>
     </NuxtLink>
     <LayoutNavigationSideBar__Menu class="mt-12" />
   </aside>
