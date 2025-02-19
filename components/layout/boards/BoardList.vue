@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { useBoardsStore } from "@/stores/boards";
+import { useAuthStore } from "@/stores/auth";
 
+const authStore = useAuthStore();
 const boardStore = useBoardsStore();
 const boardList = computed(() => boardStore.boards);
 
 onMounted(async () => {
+  await authStore.waitForAuthState();
   await boardStore.getBoards();
 });
 

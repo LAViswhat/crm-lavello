@@ -6,7 +6,7 @@ const props = defineProps<{
 
 <template>
   <div
-    class="relative h-32 w-60 overflow-hidden p-2 flex flex-col items-start justify-start gap-2 rounded-lg text-lg font-medium ring-offset-white transition-colors focus-visible:outline-none duration-500 shadow-xl dark:border-gray-800 dark:bg-gray-950"
+    class="relative h-32 w-60 overflow-hidden p-2 flex flex-col items-start justify-start gap-2 rounded-lg text-lg font-medium ring-offset-white transition-colors focus-visible:outline-none duration-500 shadow-xl dark:border-gray-800 dark:bg-gray-950 hover:brightness-[0.9]"
   >
     <LayoutBoardsBoardDialog mode="edit" :board-id="props.boardId">
       <template #trigger

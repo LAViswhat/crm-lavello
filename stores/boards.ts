@@ -1,4 +1,3 @@
-import { getAuth } from "firebase/auth";
 import {
   getFirestore,
   doc,
@@ -12,6 +11,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
+import { useAuthStore } from "./auth";
 
 export interface IBoard {
   boardId: string;
@@ -24,7 +24,8 @@ export interface IBoard {
 export const useBoardsStore = defineStore("boards", () => {
   const loader = ref(false);
   const router = useRouter();
-  const userId = getAuth().currentUser?.uid;
+  const authStore = useAuthStore();
+  const { currentUser } = storeToRefs(authStore);
   const db = getFirestore();
   const boards = ref<IBoard[]>([]);
 
@@ -42,9 +43,15 @@ export const useBoardsStore = defineStore("boards", () => {
       createdAt: new Date(),
     };
     try {
-      if (userId) {
+      if (currentUser.value?.uid) {
         await setDoc(
-          doc(db, "users", `${userId}`, "boards", `${payload.boardId}`),
+          doc(
+            db,
+            "users",
+            `${currentUser.value?.uid}`,
+            "boards",
+            `${payload.boardId}`
+          ),
           payload
         );
         await getBoards();
@@ -58,11 +65,11 @@ export const useBoardsStore = defineStore("boards", () => {
   };
 
   const getBoards = async (): Promise<void> => {
-    if (!userId) return;
+    if (!currentUser.value?.uid) return;
     loader.value = true;
     try {
       const getData = query(
-        collection(db, "users", `${userId}`, "boards"),
+        collection(db, "users", `${currentUser.value?.uid}`, "boards"),
         orderBy("createdAt", "desc")
       );
 
@@ -83,9 +90,15 @@ export const useBoardsStore = defineStore("boards", () => {
   };
 
   const getBoard = async (boardId: string): Promise<IBoard | null> => {
-    if (!userId) return null;
+    if (!currentUser.value?.uid) return null;
 
-    const docRef = doc(db, "users", `${userId}`, "boards", boardId);
+    const docRef = doc(
+      db,
+      "users",
+      `${currentUser.value?.uid}`,
+      "boards",
+      boardId
+    );
 
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
@@ -102,13 +115,16 @@ export const useBoardsStore = defineStore("boards", () => {
     gradient: string | undefined
   ): Promise<void> => {
     try {
-      if (userId) {
-        await updateDoc(doc(db, "users", `${userId}`, "boards", boardId), {
-          boardName: name,
-          boardDescription: description ?? "",
-          gradient: gradient ?? "",
-          editedAt: new Date(),
-        });
+      if (currentUser.value?.uid) {
+        await updateDoc(
+          doc(db, "users", `${currentUser.value?.uid}`, "boards", boardId),
+          {
+            boardName: name,
+            boardDescription: description ?? "",
+            gradient: gradient ?? "",
+            editedAt: new Date(),
+          }
+        );
 
         await getBoards();
       }
@@ -118,10 +134,12 @@ export const useBoardsStore = defineStore("boards", () => {
   };
 
   const removeBoard = async (boardId: string): Promise<void> => {
-    if (!userId) return;
+    if (!currentUser.value?.uid) return;
 
     try {
-      await deleteDoc(doc(db, "users", `${userId}`, "boards", boardId));
+      await deleteDoc(
+        doc(db, "users", `${currentUser.value?.uid}`, "boards", boardId)
+      );
       await getBoards();
     } catch (e) {
       console.error("Error removing document: ", e);
