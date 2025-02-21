@@ -8,7 +8,7 @@ const props = defineProps<{
 </script>
 <template>
   <UiAlertDialog>
-    <UiAlertDialogTrigger>
+    <UiAlertDialogTrigger class="h-[18px]">
       <slot name="alertTrigger" />
     </UiAlertDialogTrigger>
     <UiAlertDialogContent>

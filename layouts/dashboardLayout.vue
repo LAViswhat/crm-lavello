@@ -12,13 +12,18 @@ onMounted(async () => {
   <div class="flex flex-row h-screen">
     <LayoutLoader v-if="loaderStore.isLoading" />
     <template v-else>
-      <LayoutNavigationSideBar class="basis-1/6"></LayoutNavigationSideBar>
-      <div class="basis-5/6">
-        <LayoutNavigationHeader></LayoutNavigationHeader>
-        <main>
-          <slot></slot>
-        </main>
-      </div>
+      <UiSidebarProvider>
+        <LayoutNavigationSidebar></LayoutNavigationSidebar>
+        <UiSidebarInset>
+          <header
+            class="flex flex-row justify-between md:justify-end border border-gray-200"
+          >
+            <UiSidebarTrigger class="flex md:hidden -ml-1 text-primary" />
+            <LayoutNavigationHeader></LayoutNavigationHeader>
+          </header>
+          <slot />
+        </UiSidebarInset>
+      </UiSidebarProvider>
     </template>
   </div>
 </template>
