@@ -35,13 +35,15 @@ const boardList = computed(() => boardStore.boards);
               :style="{ 'background-image': board.gradient }"
             ></div>
             <div
-              class="flex flex-row flex-nowrap justify-between flex-1 overflow-hidden"
+              class="flex flex-row flex-nowrap justify-between items-center flex-1 overflow-hidden"
             >
               <UiSidebarMenuSubButton as-child>
-                <NuxtLink to="/" class="w-full">
+                <NuxtLink :to="`/board/${board.boardId}`" class="w-full">
                   <span>{{ board.boardName }}</span>
                 </NuxtLink>
-                <div class="flex flex-row flex-nowrap items-center gap-3">
+                <div
+                  class="flex flex-row flex-nowrap justify-center items-center gap-3 pt-1"
+                >
                   <LayoutBoardsBoardDialog
                     mode="edit"
                     :board-id="board.boardId"

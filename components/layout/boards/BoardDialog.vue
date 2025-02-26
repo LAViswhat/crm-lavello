@@ -6,7 +6,7 @@ const props = defineProps<{
 </script>
 <template>
   <UiDialog>
-    <UiDialogTrigger class="h-[18px]">
+    <UiDialogTrigger>
       <slot name="trigger" />
     </UiDialogTrigger>
     <LayoutBoardsBoardDialogContent

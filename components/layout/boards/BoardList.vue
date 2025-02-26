@@ -49,12 +49,14 @@ const formatDate = (date: Date) => {
             :key="board.boardId"
             :style="{ 'background-image': board.gradient }"
           >
-            <h4
-              class="pt-2"
-              :class="[board.gradient ? 'text-gray-200' : 'text-primary']"
-            >
-              {{ board.boardName }}
-            </h4>
+            <NuxtLink :to="`/board/${board.boardId}`" class="h-full w-full">
+              <h4
+                class="pt-2"
+                :class="[board.gradient ? 'text-gray-200' : 'text-primary']"
+              >
+                {{ board.boardName }}
+              </h4>
+            </NuxtLink>
           </LayoutBoardsBoardCard>
         </UiHoverCardTrigger>
         <UiHoverCardContent>

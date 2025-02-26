@@ -1,7 +1,10 @@
 <script setup lang="ts"></script>
 
 <template>
-  <UiSidebar collapsible="icon" class="bg-newblack">
+  <UiSidebar
+    collapsible="icon"
+    class="bg-newblack group-data-[side=left]:border-r-gray-400"
+  >
     <UiSidebarHeader>
       <UiSidebarMenu class="pl-0">
         <UiSidebarMenuItem>

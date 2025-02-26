@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const gradients = [
-  "linear-gradient(90deg, hsla(197, 14%, 57%, 1) 0%, rgb(143, 208, 242) 100%)",
+  "linear-gradient(90deg, hsla(233, 100%, 90%, 1) 0%, hsla(0, 0%, 89%, 1) 100%)",
   "linear-gradient(90deg, hsla(220, 78%, 29%, 1) 0%, hsla(221, 45%, 73%, 1) 100%)",
   "linear-gradient(90deg, hsla(333, 100%, 53%, 1) 0%, hsla(33, 94%, 57%, 1) 100%)",
   "linear-gradient(90deg, hsla(186, 66%, 40%, 1) 0%, hsla(188, 78%, 69%, 1) 100%)",

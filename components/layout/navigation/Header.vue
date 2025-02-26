@@ -16,10 +16,10 @@ const handleSignOut = async () => {
 <template>
   <UiMenubar>
     <UiMenubarMenu>
-      <UiMenubarTrigger>
+      <UiMenubarTrigger class="bg-newblack">
         <div class="flex items-center justify-between gap-1">
           <img src="/public/profile.svg" />
-          <div class="flex flex-col items-start text-sm">
+          <div class="flex flex-col items-start text-sm text-newwhite">
             <span>{{ authStore.currentUser?.email }}</span>
             <span class="font-bold" v-if="authStore.currentUser?.displayName">{{
               authStore.currentUser?.displayName
