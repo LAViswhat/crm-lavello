@@ -54,8 +54,8 @@ const formatDate = (date: string | Date | Timestamp) => {
   <LayoutLoader v-if="boardStore.loader" />
   <div
     v-else
-    class="board-main-content flex flex-col"
-    :style="{ 'background-image': board?.gradient }"
+    class="board-main-content flex flex-col duration-300"
+    :style="{ 'background-image': board?.gradient, opacity: board ? 1 : 0 }"
   >
     <div
       class="board-header h-16 flex flex-row justify-between items-center relative"
