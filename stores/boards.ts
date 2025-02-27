@@ -125,7 +125,6 @@ export const useBoardsStore = defineStore("boards", () => {
             editedAt: new Date(),
           }
         );
-
         await getBoards();
       }
     } catch (e) {
@@ -141,6 +140,7 @@ export const useBoardsStore = defineStore("boards", () => {
         doc(db, "users", `${currentUser.value?.uid}`, "boards", boardId)
       );
       await getBoards();
+      await router.push("/dashboard");
     } catch (e) {
       console.error("Error removing document: ", e);
     }

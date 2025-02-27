@@ -8,12 +8,16 @@ definePageMeta({
 });
 
 const route = useRoute();
+const router = useRouter();
 const boardStore = useBoardsStore();
 const board = ref<IBoard | null>();
 
 onMounted(async () => {
   await boardStore.getBoards();
   board.value = await boardStore.getBoard(route.params.id as string);
+  if (!board.value) {
+    await router.push("/dashboard");
+  }
 });
 
 // Функция для форматирования даты

@@ -1,22 +1,26 @@
 <script setup lang="ts">
-import type { DialogTitleProps } from 'radix-vue'
-import type { HTMLAttributes } from 'vue'
-import { cn } from '@/lib/utils'
-import { DialogTitle } from 'radix-vue'
-import { computed } from 'vue'
+import type { DialogTitleProps } from "radix-vue";
+import type { HTMLAttributes } from "vue";
+import { cn } from "@/lib/utils";
+import { DialogTitle } from "radix-vue";
+import { computed } from "vue";
 
-const props = defineProps<DialogTitleProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<
+  DialogTitleProps & { class?: HTMLAttributes["class"] }
+>();
 
 const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
+  const { class: _, ...delegated } = props;
 
-  return delegated
-})
+  return delegated;
+});
 </script>
 
 <template>
   <DialogTitle
-    :class="cn('text-lg font-semibold text-gray-950 dark:text-gray-50', props.class)"
+    :class="
+      cn('text-lg font-semibold text-newblack dark:text-gray-50', props.class)
+    "
     v-bind="delegatedProps"
   >
     <slot />
