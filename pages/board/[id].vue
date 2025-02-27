@@ -20,6 +20,15 @@ onMounted(async () => {
   }
 });
 
+watchEffect(async () => {
+  if (board.value) {
+    const updatedBoard = await boardStore.getBoard(board.value.boardId);
+    if (updatedBoard) {
+      board.value = updatedBoard;
+    }
+  }
+});
+
 // Функция для форматирования даты
 const formatDate = (date: string | Date | Timestamp) => {
   if (typeof date === "string") {
