@@ -8,7 +8,7 @@ defineProps<{
 
 <template>
   <UiSheet>
-    <UiMenubar>
+    <UiMenubar class="bg-transparent">
       <UiMenubarMenu>
         <UiMenubarTrigger
           class="hover:bg-gray-300/30 data-[state=open]:bg-gray-300/50"

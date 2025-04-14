@@ -3,12 +3,19 @@ import { useBoardsStore } from "@/stores/boards";
 
 const boardStore = useBoardsStore();
 const boardList = computed(() => boardStore.boards);
+
+const handleClick = () => {
+  const sidebar = document.querySelector('[data-sidebar="sidebar"]');
+  if (sidebar) {
+    sidebar.closest(".group")?.setAttribute("data-collapsible", "");
+  }
+};
 </script>
 <template>
   <UiCollapsible as-child :default-open="true" class="group/collapsible">
     <UiSidebarMenuItem class="relative inline-flex flex-col flex-grow">
       <UiCollapsibleTrigger>
-        <UiSidebarMenuButton size="custom">
+        <UiSidebarMenuButton size="custom" @click="handleClick">
           <div
             class="flex items-center flex-grow gap-4 p-2 text-newwhite capitalize font-bold rounded-md duration-300 hover:text-[#1b9b4f] hover:opacity-70 hover:bg-newwhite"
           >
