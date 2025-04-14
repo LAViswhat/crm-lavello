@@ -25,29 +25,29 @@ const props = defineProps<{
 }>();
 
 const boardStore = useBoardsStore();
-const boardData = ref<{
-  boardName: string;
-  boardDescription?: string;
-  gradient?: string;
-} | null>(null);
-const nameField = ref(boardData.value?.boardName || "");
-const descriptionField = ref(boardData.value?.boardDescription || "");
-const selectedGradient = ref(boardData.value?.gradient || "");
+const nameField = ref("");
+const descriptionField = ref("");
+const selectedGradient = ref("");
 
 onMounted(async () => {
   if (props.mode === "edit" && props.boardId) {
-    boardData.value = await boardStore.getBoard(props.boardId);
-
-    if (boardData.value) {
-      nameField.value = boardData.value.boardName;
-      descriptionField.value = boardData.value.boardDescription || "";
-      selectedGradient.value = boardData.value.gradient || "";
+    const boardData = await boardStore.getBoard(props.boardId);
+    if (boardData) {
+      nameField.value = boardData.boardName;
+      descriptionField.value = boardData.boardDescription || "";
+      selectedGradient.value = boardData.gradient || "";
 
       form.setValues({
-        name: boardData.value.boardName,
-        description: boardData.value.boardDescription,
+        name: boardData.boardName,
+        description: boardData.boardDescription,
       });
     }
+  } else {
+    // Сброс полей при создании новой доски
+    nameField.value = "";
+    descriptionField.value = "";
+    selectedGradient.value = "";
+    form.resetForm();
   }
 });
 
@@ -55,20 +55,29 @@ const disabledCreateBtn = computed<boolean>(() => {
   return !nameField.value;
 });
 
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
+
 const onSubmit = form.handleSubmit(async (values) => {
-  if (props.mode === "edit" && props.boardId) {
-    await boardStore.updateBoard(
-      props.boardId,
-      values.name,
-      values.description,
-      selectedGradient.value
-    );
-  } else {
-    await boardStore.createBoard(
-      values.name,
-      values.description,
-      selectedGradient.value
-    );
+  try {
+    if (props.mode === "edit" && props.boardId) {
+      await boardStore.updateBoard(
+        props.boardId,
+        values.name,
+        values.description,
+        selectedGradient.value
+      );
+    } else {
+      await boardStore.createBoard(
+        values.name,
+        values.description,
+        selectedGradient.value
+      );
+    }
+    emit("close");
+  } catch (error) {
+    console.error("Error saving board:", error);
   }
 });
 </script>
