@@ -15,6 +15,7 @@ const boardList = computed(() => boardStore.boards);
             <Icon name="solar:clipboard-list-broken" class="text-2xl" />
             <span>Boards</span>
             <Icon
+              v-if="boardList.length"
               name="gg:chevron-up-o"
               class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180"
             />
@@ -22,7 +23,7 @@ const boardList = computed(() => boardStore.boards);
         </UiSidebarMenuButton>
       </UiCollapsibleTrigger>
 
-      <UiCollapsibleContent>
+      <UiCollapsibleContent v-if="boardList.length">
         <UiSidebarMenuSub class="mx-6 px-0">
           <UiSidebarMenuSubItem
             v-for="board in boardList"
