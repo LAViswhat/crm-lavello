@@ -3,7 +3,7 @@ import { useBoardsStore } from "~/stores/boards";
 
 const boardStore = useBoardsStore();
 const props = defineProps<{
-  boardId: string;
+  boardId: string | undefined;
 }>();
 </script>
 <template>
@@ -23,7 +23,8 @@ const props = defineProps<{
       </UiAlertDialogHeader>
       <UiAlertDialogFooter>
         <UiAlertDialogCancel>Cancel</UiAlertDialogCancel>
-        <UiAlertDialogAction @click="boardStore.removeBoard(props.boardId)"
+        <UiAlertDialogAction
+          @click="boardStore.removeBoard(props.boardId || '')"
           >Remove</UiAlertDialogAction
         >
       </UiAlertDialogFooter>

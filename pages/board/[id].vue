@@ -53,6 +53,7 @@ const boardCreatedAt = computed(() => {
         :board-name="board?.boardName"
         :board-description="board?.boardDescription"
         :board-created-at="boardCreatedAt"
+        :board-id="board?.boardId"
         class="bg-transparent"
       />
       <div class="absolute inset-0 bg-slate-500/50 z-10"></div>
