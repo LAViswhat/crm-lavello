@@ -41,7 +41,7 @@
       <Icon
         name="icon-park-outline:expand-right"
         size="32"
-        class="group-data-[state=collapsed]:rotate-180"
+        class="group-data-[state=collapsed]:rotate-180 text-primary"
       />
     </UiSidebarRail>
   </UiSidebar>

@@ -58,13 +58,13 @@ const boardCreatedAt = computed(() => {
       />
       <div class="absolute inset-0 bg-slate-500/50 z-10"></div>
     </div>
-    <div class="board-canvas p-2 h-svh flex-grow">
-      <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eveniet
-        exercitationem placeat impedit consequuntur maxime nostrum in cumque,
-        aspernatur quidem sint repellendus, asperiores temporibus error sed eos
-        corporis excepturi odit est!
-      </p>
+    <div class="board-canvas mt-4 px-4 h-svh flex-grow">
+      <div class="flex gap-4">
+        <UiButton variant="outline" size="md" class="justify-start !min-w-64">
+          <Icon name="mynaui:plus" size="24" class="" />
+          <span class="text-lg">Add a new list</span></UiButton
+        >
+      </div>
     </div>
   </div>
 </template>

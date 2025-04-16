@@ -9,7 +9,7 @@ const props = defineProps<{ class?: HTMLAttributes["class"] }>();
   <div
     :class="
       cn(
-        'flex flex-col-reverse sm:flex-row sm:justify-start sm:gap-x-2',
+        'flex flex-col-reverse text-primary sm:flex-row sm:justify-start sm:gap-x-2',
         props.class
       )
     "

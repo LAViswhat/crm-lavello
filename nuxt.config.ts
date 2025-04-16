@@ -17,4 +17,8 @@ export default defineNuxtConfig({
     prefix: "Ui",
     componentDir: "./components/ui",
   },
+  tailwindcss: {
+    cssPath: "~/assets/css/tailwind.css",
+    configPath: "tailwind.config.js",
+  },
 });

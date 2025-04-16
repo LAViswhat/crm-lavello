@@ -12,7 +12,7 @@ export const buttonVariants = cva(
         destructive:
           "bg-warning text-gray-50 shadow-sm hover:bg-warning/90 dark:bg-red-900 dark:text-gray-50 dark:hover:bg-red-900/90",
         outline:
-          "border-2 border-primary bg-white shadow-sm hover:bg-gray-100 hover:text-secondary dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50",
+          "border-2 border-primary text-primary bg-white shadow-sm hover:bg-gray-100 hover:text-secondary dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50",
         secondary:
           "bg-gray-200 text-newblack shadow-sm hover:text-primary hover:bg-gray-200/70 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-800/80",
         ghost:

@@ -44,6 +44,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
     <DialogContent
       :class="cn(sheetVariants({ side }), props.class)"
       v-bind="{ ...forwarded, ...$attrs }"
+      class="bg-newwhite"
     >
       <slot />
 
