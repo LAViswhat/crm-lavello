@@ -16,6 +16,8 @@ const board = ref<IBoard | null>();
 const listName = ref("");
 const boardLists = ref<IBoardList[]>([]);
 const popoverIsOpen = ref(false);
+const editingListId = ref<string | null>(null);
+const tempListName = ref("");
 
 onMounted(async () => {
   await boardStore.getBoards();
@@ -55,6 +57,37 @@ const createList = async () => {
   await boardListsStore.createList(board.value.boardId, listName.value.trim());
   listName.value = "";
   popoverIsOpen.value = false;
+};
+
+const startEditing = (list: IBoardList) => {
+  editingListId.value = list.listId;
+  tempListName.value = list.listName;
+};
+
+const saveListName = async (listId: string) => {
+  if (!board.value?.boardId || !tempListName.value.trim()) {
+    editingListId.value = null;
+    return;
+  }
+  await boardListsStore.updateListName(
+    board.value.boardId,
+    listId,
+    tempListName.value.trim()
+  );
+  editingListId.value = null;
+};
+
+const cancelEditing = () => {
+  editingListId.value = null;
+  tempListName.value = "";
+};
+
+const handleKeydown = async (event: KeyboardEvent, listId: string) => {
+  if (event.key === "Enter") {
+    await saveListName(listId);
+  } else if (event.key === "Escape") {
+    cancelEditing();
+  }
 };
 </script>
 <template>
@@ -122,7 +155,20 @@ const createList = async () => {
       <div class="lists-container mt-4 flex gap-4 flex-wrap">
         <UiCard v-for="list in boardLists" :key="list.listId">
           <UiCardHeader>
-            <UiCardTitle>{{ list.listName }}</UiCardTitle>
+            <div v-if="editingListId === list.listId">
+              <UiInput
+                v-model="tempListName"
+                type="text"
+                class="text-lg font-bold text-newblack w-full bg-transparent border-b border-primary focus:outline-none focus:border-primary"
+                @blur="saveListName(list.listId)"
+                @keydown="handleKeydown($event, list.listId)"
+                ref="inputRef"
+                autofocus
+              />
+            </div>
+            <UiCardTitle v-else @click="startEditing(list)">{{
+              list.listName
+            }}</UiCardTitle>
             <UiCardDescription
               >Created:
               {{ list.createdAt.toLocaleDateString() }}</UiCardDescription

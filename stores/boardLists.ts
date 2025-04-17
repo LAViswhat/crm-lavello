@@ -6,6 +6,7 @@ import {
   query,
   orderBy,
   getDocs,
+  updateDoc,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "./auth";
@@ -88,10 +89,41 @@ export const useBoardListsStore = defineStore("boardLists", () => {
       loader.value = false;
     }
   };
+
+  const updateListName = async (
+    boadrdId: string,
+    listId: string,
+    listName: string
+  ): Promise<void> => {
+    loader.value = true;
+    try {
+      if (currentUser.value?.uid) {
+        await updateDoc(
+          doc(
+            db,
+            "users",
+            `${currentUser.value?.uid}`,
+            "boards",
+            `${boadrdId}`,
+            "lists",
+            `${listId}`
+          ),
+          { listName, updateAt: new Date() }
+        );
+        await getBoardLists(boadrdId);
+      }
+    } catch (e) {
+      console.error("Error updating list name: ", e);
+    } finally {
+      loader.value = false;
+    }
+  };
+
   return {
     loader,
     createList,
     getBoardLists,
     boardLists,
+    updateListName,
   };
 });
