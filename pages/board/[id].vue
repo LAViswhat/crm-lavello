@@ -61,7 +61,7 @@ const createList = async () => {
   <LayoutLoader v-if="boardStore.loader" />
   <div
     v-else
-    class="board-main-content flex flex-col duration-300"
+    class="board-main-content flex flex-col min-h-full duration-300"
     :style="{ 'background-image': board?.gradient, opacity: board ? 1 : 0 }"
   >
     <div
@@ -76,7 +76,7 @@ const createList = async () => {
       />
       <div class="absolute inset-0 bg-slate-500/50 z-10"></div>
     </div>
-    <div class="board-canvas mt-8 px-8 h-svh flex-grow">
+    <div class="board-canvas mt-8 px-8 flex-grow">
       <div class="flex gap-4">
         <UiPopover v-model:open="popoverIsOpen">
           <UiPopoverTrigger>
@@ -120,31 +120,21 @@ const createList = async () => {
         </UiPopover>
       </div>
       <div class="lists-container mt-4 flex gap-4 flex-wrap">
-        <div
-          v-for="list in boardLists"
-          :key="list.listId"
-          class="list-card bg-newwhite p-4 rounded-md shadow-md min-w-[250px] max-w-[300px]"
-        >
-          <h3 class="text-lg font-bold text-newblack">{{ list.listName }}</h3>
-          <p class="text-sm text-gray-500">
-            Created: {{ list.createdAt.toLocaleDateString() }}
-          </p>
-          <div class="items-container mt-2">
-            <!-- Placeholder for future items/tasks -->
-            <p class="text-gray-400">No items yet</p>
-          </div>
-        </div>
+        <UiCard v-for="list in boardLists" :key="list.listId">
+          <UiCardHeader>
+            <UiCardTitle>{{ list.listName }}</UiCardTitle>
+            <UiCardDescription
+              >Created:
+              {{ list.createdAt.toLocaleDateString() }}</UiCardDescription
+            >
+          </UiCardHeader>
+          <UiCardContent>
+            <p>No items yet</p>
+          </UiCardContent>
+        </UiCard>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-.list-card {
-  transition: all 0.2s ease-in-out;
-}
-.list-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-</style>
+<style scoped></style>
