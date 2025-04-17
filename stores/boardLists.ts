@@ -7,6 +7,7 @@ import {
   orderBy,
   getDocs,
   updateDoc,
+  writeBatch,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "./auth";
@@ -16,6 +17,7 @@ export interface IBoardList {
   listName: string;
   createdAt: Date;
   items: any[];
+  order: number;
 }
 
 export const useBoardListsStore = defineStore("boardLists", () => {
@@ -30,14 +32,21 @@ export const useBoardListsStore = defineStore("boardLists", () => {
     listName: string
   ): Promise<void> => {
     loader.value = true;
-    const payload: IBoardList = {
-      listId: uuidv4(),
-      listName,
-      createdAt: new Date(),
-      items: [],
-    };
     try {
       if (currentUser.value?.uid) {
+        await getBoardLists(boardId);
+        const maxOrder = boardLists.value.length
+          ? Math.max(...boardLists.value.map((list) => list.order))
+          : -1;
+
+        const payload: IBoardList = {
+          listId: uuidv4(),
+          listName,
+          createdAt: new Date(),
+          items: [],
+          order: maxOrder + 1,
+        };
+
         await setDoc(
           doc(
             db,
@@ -72,7 +81,7 @@ export const useBoardListsStore = defineStore("boardLists", () => {
           `${boadrId}`,
           "lists"
         ),
-        orderBy("createdAt", "asc")
+        orderBy("order", "asc")
       );
 
       const docsList = await getDocs(getData);
@@ -119,11 +128,43 @@ export const useBoardListsStore = defineStore("boardLists", () => {
     }
   };
 
+  const updateBoardListOrder = async (
+    boardId: string,
+    reorderedLists: IBoardList[]
+  ): Promise<void> => {
+    loader.value = true;
+
+    try {
+      if (currentUser.value?.uid) {
+        const batch = writeBatch(db);
+        reorderedLists.forEach((list, index) => {
+          const listRef = doc(
+            db,
+            "users",
+            `${currentUser.value?.uid}`,
+            "boards",
+            `${boardId}`,
+            "lists",
+            `${list.listId}`
+          );
+          batch.update(listRef, { order: index });
+        });
+        await batch.commit();
+        await getBoardLists(boardId);
+      }
+    } catch (e) {
+      console.error("Error updating list order: ", e);
+    } finally {
+      loader.value = false;
+    }
+  };
+
   return {
     loader,
     createList,
     getBoardLists,
     boardLists,
     updateListName,
+    updateBoardListOrder,
   };
 });
