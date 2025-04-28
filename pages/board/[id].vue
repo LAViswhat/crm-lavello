@@ -89,7 +89,22 @@ const handleKeydown = async (event: KeyboardEvent, listId: string) => {
     cancelEditing();
   }
 };
+
+const onDragEnd = async () => {
+  if (board.value?.boardId) {
+    await boardListsStore.updateBoardListOrder(
+      board.value.boardId,
+      boardLists.value
+    );
+    boardLists.value = [...boardLists.value];
+  }
+};
+
+const handleDraggableError = (error: any) => {
+  console.error("Draggable error:", error);
+};
 </script>
+
 <template>
   <LayoutLoader v-if="boardStore.loader" />
   <div
@@ -119,8 +134,8 @@ const handleKeydown = async (event: KeyboardEvent, listId: string) => {
               class="justify-start !min-w-64"
             >
               <Icon name="mynaui:plus" size="24" class="" />
-              <span class="text-lg">Add a new list</span></UiButton
-            >
+              <span class="text-lg">Add a new list</span>
+            </UiButton>
           </UiPopoverTrigger>
           <UiPopoverContent>
             <div>
@@ -131,12 +146,13 @@ const handleKeydown = async (event: KeyboardEvent, listId: string) => {
                 placeholder="Enter the list name..."
                 class="w-full mb-4"
                 v-model="listName"
+                @keydown.enter="createList"
               />
             </div>
             <div class="flex justify-around items-center">
-              <UiButton variant="default" @click="createList"
-                >Add list</UiButton
-              >
+              <UiButton variant="default" @click="createList">
+                Add list
+              </UiButton>
               <UiButton
                 variant="ghost"
                 size="icon"
@@ -152,35 +168,122 @@ const handleKeydown = async (event: KeyboardEvent, listId: string) => {
           </UiPopoverContent>
         </UiPopover>
       </div>
-      <div class="lists-container mt-4 flex gap-4 flex-wrap">
-        <UiCard v-for="list in boardLists" :key="list.listId">
-          <UiCardHeader>
-            <div v-if="editingListId === list.listId">
-              <UiInput
-                v-model="tempListName"
-                type="text"
-                class="text-lg font-bold text-newblack w-full bg-transparent border-b border-primary focus:outline-none focus:border-primary"
-                @blur="saveListName(list.listId)"
-                @keydown="handleKeydown($event, list.listId)"
-                ref="inputRef"
-                autofocus
-              />
-            </div>
-            <UiCardTitle v-else @click="startEditing(list)">{{
-              list.listName
-            }}</UiCardTitle>
-            <UiCardDescription
-              >Created:
-              {{ list.createdAt.toLocaleDateString() }}</UiCardDescription
+      <ClientOnly>
+        <draggable
+          tag="transition-group"
+          :component-data="{
+            attrs: {
+              name: 'draggableList',
+              class: 'draggableList mt-4 flex gap-4 flex-wrap',
+            },
+          }"
+          item-key="listId"
+          :list="boardLists"
+          @change="onDragEnd"
+          @end="onDragEnd"
+          @error="handleDraggableError"
+          :sort="true"
+          :disabled="editingListId !== null"
+          animation="300"
+          ghost-class="ghost"
+          drag-class="dragging"
+          :touch="true"
+          :fallback-on-body="true"
+          :force-fallback="true"
+        >
+          <template #default>
+            <UiCard
+              v-for="list in boardLists"
+              :key="list.listId"
+              class="draggableCard"
             >
-          </UiCardHeader>
-          <UiCardContent>
-            <p>No items yet</p>
-          </UiCardContent>
-        </UiCard>
-      </div>
+              <UiCardHeader>
+                <div v-if="editingListId === list.listId">
+                  <UiInput
+                    v-model="tempListName"
+                    type="text"
+                    class="text-lg font-bold text-newblack w-full bg-transparent border-b border-primary focus:outline-none focus:border-primary"
+                    @blur="saveListName(list.listId)"
+                    @keydown="handleKeydown($event, list.listId)"
+                    ref="inputRef"
+                    autofocus
+                  />
+                </div>
+                <UiCardTitle v-else @click="startEditing(list)">
+                  {{ list.listName }}
+                </UiCardTitle>
+                <UiCardDescription>
+                  Created: {{ list.createdAt.toLocaleDateString() }}
+                </UiCardDescription>
+              </UiCardHeader>
+              <UiCardContent>
+                <p>No items yet</p>
+              </UiCardContent>
+            </UiCard>
+          </template>
+        </draggable>
+      </ClientOnly>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.dragging {
+  transform: rotate(6deg) scale(1.05);
+  opacity: 0.85;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+  cursor: grabbing;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease,
+    box-shadow 0.25s ease;
+  z-index: 50;
+  user-select: none;
+}
+
+.draggableCard {
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+  user-select: none;
+}
+
+.ghost {
+  opacity: 0.3;
+  transform: scale(0.95);
+  border: 2px dashed #cbd5e1;
+  background-color: #f8fafc;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease,
+    background-color 0.25s ease;
+  user-select: none;
+}
+
+.draggableList-move {
+  transition: transform 300ms ease;
+}
+.draggableList-enter-active,
+.draggableList-leave-active {
+  transition: all 0.3s ease;
+}
+
+.draggableList > * {
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.25s ease;
+}
+
+.v-move {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.draggableCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  cursor: grab;
+}
+</style>
