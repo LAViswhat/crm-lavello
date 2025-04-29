@@ -9,7 +9,7 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <div class="flex flex-row h-screen">
+  <div class="flex flex-row h-full">
     <LayoutLoader v-if="loaderStore.isLoading" />
     <template v-else>
       <UiSidebarProvider>

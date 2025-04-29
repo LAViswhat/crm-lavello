@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { type IBoardList } from "@/stores/boardLists";
+import { useListCardsStore, type IListCard } from "@/stores/listCards";
 
 const props = defineProps<{
   list: IBoardList;
   isEditing: boolean;
   tempListName: string;
+  boardId?: string;
 }>();
 
 defineEmits<{
@@ -16,15 +18,25 @@ defineEmits<{
 }>();
 
 const inputRef = ref<HTMLInputElement | null>(null);
+const listCardsStore = useListCardsStore();
+const { listCards } = storeToRefs(listCardsStore);
+
 onMounted(() => {
   if (props.isEditing && inputRef.value) {
     inputRef.value.focus();
   }
+  if (props.boardId && props.list.listId) {
+    listCardsStore.getListCards(props.boardId, props.list.listId);
+  }
+});
+
+const cardsForList = computed(() => {
+  return listCards.value.get(props.list.listId) || [];
 });
 </script>
 <template>
-  <UiCard class="draggableCard">
-    <UiCardHeader>
+  <UiCard class="draggableCard h-fit w-[268px]">
+    <UiCardHeader class="pb-2">
       <div v-if="isEditing">
         <UiInput
           :model-value="tempListName"
@@ -44,9 +56,24 @@ onMounted(() => {
         Created: {{ list.createdAt.toLocaleDateString() }}
       </UiCardDescription>
     </UiCardHeader>
-    <UiCardContent>
-      <p>No items yet</p>
+    <UiCardContent class="p-2">
+      <div v-if="cardsForList.length > 0" class="space-y-2">
+        <div
+          v-for="card in cardsForList"
+          :key="card.cardId"
+          class="p-2 pr-4 bg-gray-100/70 rounded-md"
+        >
+          <p class="text-sm font-normal">{{ card.cardName }}</p>
+        </div>
+      </div>
+      <p v-else class="text-gray-500">No cards yet</p>
     </UiCardContent>
+    <UiCardFooter class="justify-center">
+      <LayoutBoardCardCreator
+        :board-id="boardId || ''"
+        :list-id="list?.listId || ''"
+      />
+    </UiCardFooter>
   </UiCard>
 </template>
 

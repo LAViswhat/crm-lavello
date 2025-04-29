@@ -75,12 +75,13 @@ const handleDraggableError = (error: any) => {
     :force-fallback="true"
   >
     <template #default>
-      <LayoutBoardPageCard
+      <LayoutBoardPageList
         v-for="list in lists"
         :key="list.listId"
         :list="list"
         :is-editing="editingListId === list.listId"
         :temp-list-name="tempListName"
+        :board-id="boardId"
         @start-editing="startEditing"
         @save-list-name="saveListName"
         @cancel-editing="cancelEditing"

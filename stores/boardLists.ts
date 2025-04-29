@@ -16,7 +16,6 @@ export interface IBoardList {
   listId: string;
   listName: string;
   createdAt: Date;
-  items: any[];
   order: number;
 }
 
@@ -43,7 +42,6 @@ export const useBoardListsStore = defineStore("boardLists", () => {
           listId: uuidv4(),
           listName,
           createdAt: new Date(),
-          items: [],
           order: maxOrder + 1,
         };
 
