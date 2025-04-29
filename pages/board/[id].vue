@@ -68,12 +68,9 @@ const boardCreatedAt = computed(() => {
       <div class="absolute inset-0 bg-slate-500/50 z-10"></div>
     </div>
     <div class="board-canvas mt-8 px-8 flex-grow">
-      <LayoutBoardListCreator :board-id="board?.boardId" />
+      <LayoutBoardListCreator :board-id="board?.boardId || ''" />
       <ClientOnly>
-        <LayoutBoardDraggableLists
-          :board-id="board?.boardId"
-          :lists="boardLists"
-        />
+        <LayoutBoardPageLists :board-id="board?.boardId" :lists="boardLists" />
       </ClientOnly>
     </div>
   </div>

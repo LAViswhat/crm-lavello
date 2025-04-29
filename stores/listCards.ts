@@ -11,7 +11,6 @@ import {
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "./auth";
-import { list } from "postcss";
 
 export interface IListCard {
   cardId: string;
@@ -114,5 +113,35 @@ export const useListCardsStore = defineStore("listCards", () => {
       loader.value = false;
     }
   };
-  return { createCard, getListCards, listCards, loader };
+
+  const updateCardOrder = async (
+    boardId: string,
+    listId: string,
+    reorderedCards: IListCard[]
+  ): Promise<void> => {
+    try {
+      if (currentUser.value?.uid) {
+        const batch = writeBatch(db);
+        reorderedCards.forEach((card, index) => {
+          const cardRef = doc(
+            db,
+            "users",
+            `${currentUser.value?.uid}`,
+            "boards",
+            `${boardId}`,
+            "lists",
+            `${listId}`,
+            "cards",
+            `${card.cardId}`
+          );
+          batch.update(cardRef, { order: index });
+        });
+        await batch.commit();
+        await getListCards(boardId, listId);
+      }
+    } catch (e) {
+      console.error("Error updating card order:", e);
+    }
+  };
+  return { createCard, getListCards, updateCardOrder, listCards, loader };
 });
