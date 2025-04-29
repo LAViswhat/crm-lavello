@@ -9,6 +9,7 @@ const gradients = [
   "linear-gradient(90deg, hsla(97, 56%, 42%, 1) 0%, hsla(92, 55%, 62%, 1) 100%)",
   "linear-gradient(90deg, hsla(22, 94%, 79%, 1) 0%, hsla(40, 63%, 85%, 1) 100%)",
   "linear-gradient(90deg, hsla(50, 57%, 47%, 1) 0%, rgb(247, 210, 103) 100%)",
+  "hsla(360,100%,100%,1)",
 ];
 const props = defineProps<{ selectedGradient: string }>();
 const emit = defineEmits(["select-gradient"]);
