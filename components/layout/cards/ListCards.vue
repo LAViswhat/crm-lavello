@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useListCardsStore, type IListCard } from "@/stores/listCards";
+import { useListCardsStore } from "@/stores/listCards";
 
 const props = defineProps<{
   boardId?: string;
@@ -7,34 +7,44 @@ const props = defineProps<{
 }>();
 
 const listCardsStore = useListCardsStore();
-const { listCards } = storeToRefs(listCardsStore);
 
-const cardsForList = computed({
-  get: () => listCards.value.get(props.listId ?? "") || [],
-  set: (newCards) => {
-    if (props.listId) {
-      listCards.value.set(props.listId, newCards);
+// Получаем карточки для текущего списка
+const cardsForList = listCardsStore.getCardsForList(props.listId || "");
+
+// Загружаем карточки при монтировании
+onMounted(async () => {
+  if (props.boardId) {
+    if (props.boardId) {
+      await listCardsStore.loadCardsForBoard(props.boardId);
     }
-    // Trigger reactivity
-    listCards.value = new Map(listCards.value);
-  },
-});
-
-// Fetch cards on mount
-onMounted(() => {
-  if (props.boardId && props.listId) {
-    listCardsStore.getListCards(props.boardId, props.listId);
   }
 });
 
-// Handle card drag-and-drop
-const onCardDragEnd = async () => {
-  if (props.boardId && props.listId) {
-    await listCardsStore.updateCardOrder(
-      props.boardId,
-      props.listId,
-      cardsForList.value
-    );
+const onCardDragChange = async (event: any) => {
+  const { moved, added } = event;
+
+  try {
+    if (moved) {
+      // Перемещение внутри списка
+      await listCardsStore.updateCardOrder(
+        props.boardId || "",
+        props.listId || "",
+        cardsForList.value
+      );
+    } else if (added) {
+      // Перемещение между списками
+      const card = added.element;
+      await listCardsStore.moveCardToList(
+        props.boardId || "",
+        card.id,
+        props.listId || "",
+        added.newIndex
+      );
+    }
+  } catch (error) {
+    console.error("Drag and drop error:", error);
+    // Восстанавливаем состояние при ошибке
+    await listCardsStore.loadCardsForBoard(props.boardId || "");
   }
 };
 
@@ -50,12 +60,13 @@ const handleDraggableError = (error: any) => {
         :component-data="{
           attrs: {
             name: 'draggableCard',
-            class: 'draggableCardList space-y-2',
+            class: 'draggableCardList space-y-2 min-h-[50px]',
           },
         }"
         item-key="cardId"
         :list="cardsForList"
-        @end="onCardDragEnd"
+        :group="{ name: 'cards', pull: true, put: true }"
+        @change="onCardDragChange"
         @error="handleDraggableError"
         :sort="true"
         animation="300"
@@ -64,14 +75,15 @@ const handleDraggableError = (error: any) => {
         :touch="true"
         :fallback-on-body="true"
         :force-fallback="true"
+        :empty-insert-threshold="100"
       >
         <template #default>
           <div
             v-for="card in cardsForList"
-            :key="card.cardId"
+            :key="card.id"
             class="p-2 bg-gray-100 rounded-md"
           >
-            <p class="text-sm font-medium">{{ card.cardName }}</p>
+            <p class="text-sm font-medium">{{ card.name }}</p>
           </div>
         </template>
       </draggable>
