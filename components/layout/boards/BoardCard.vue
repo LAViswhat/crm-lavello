@@ -1,6 +1,9 @@
 <script setup lang="ts">
 const props = defineProps<{
   boardId: string;
+  boardName: string | undefined;
+  boardDescription: string | undefined;
+  boardCreatedAt: Date | null;
 }>();
 </script>
 
@@ -8,6 +11,11 @@ const props = defineProps<{
   <div
     class="relative h-32 w-60 overflow-hidden p-2 flex flex-col items-start justify-start gap-2 rounded-lg text-lg font-medium ring-offset-white transition-colors focus-visible:outline-none duration-500 shadow-xl dark:border-gray-800 dark:bg-gray-950 hover:brightness-[0.9]"
   >
+    <LayoutBoardsBoardCardAboutSheet
+      :board-name="boardName"
+      :board-description="boardDescription"
+      :board-created-at="boardCreatedAt"
+    />
     <LayoutBoardsBoardDialog mode="edit" :board-id="props.boardId">
       <template #trigger
         ><UiTooltipProvider>

@@ -46,6 +46,9 @@ const formatDate = (date: Date) => {
         <UiHoverCardTrigger as-child>
           <LayoutBoardsBoardCard
             :boardId="board.boardId"
+            :boardName="board.boardName"
+            :boardDescription="board.boardDescription"
+            :boardCreatedAt="board.createdAt"
             :key="board.boardId"
             :style="{ 'background-image': board.gradient }"
           >
