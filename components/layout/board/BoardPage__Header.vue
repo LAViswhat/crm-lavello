@@ -25,7 +25,7 @@ const props = defineProps<{
         </UiMenubarTrigger>
         <UiMenubarContent
           side="right"
-          class="bg-gray-300/50 border-0 w-full flex flex-col"
+          class="bg-newwhite border-0 w-full flex flex-col"
         >
           <UiSheetTrigger as-child>
             <UiMenubarItem>

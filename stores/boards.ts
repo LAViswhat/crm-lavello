@@ -9,6 +9,7 @@ import {
   getDoc,
   updateDoc,
   deleteDoc,
+  where,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "./auth";
@@ -125,6 +126,34 @@ export const useBoardsStore = defineStore("boards", () => {
     sortBoards();
   });
 
+  const searchBoards = async (searchTerm: string): Promise<IBoard[]> => {
+    if (!currentUser.value?.uid || searchTerm.length < 2) return [];
+
+    try {
+      // Разбиваем поисковый запрос на отдельные слова
+      const searchTerms = searchTerm.toLowerCase().split(/\s+/).filter(Boolean);
+
+      const boardsQuery = query(
+        collection(db, "users", currentUser.value.uid, "boards"),
+        orderBy("boardName")
+      );
+
+      const querySnapshot = await getDocs(boardsQuery);
+      return querySnapshot.docs
+        .map((doc) => ({ ...(doc.data() as IBoard), boardId: doc.id }))
+        .filter((board) => {
+          const name = board.boardName.toLowerCase();
+          const desc = board.boardDescription?.toLowerCase() || "";
+          return searchTerms.some(
+            (term) => name.includes(term) || desc.includes(term)
+          );
+        });
+    } catch (e) {
+      console.error("Search error:", e);
+      return [];
+    }
+  };
+
   const getBoard = async (boardId: string): Promise<IBoard | null> => {
     if (!currentUser.value?.uid) return null;
 
@@ -193,5 +222,6 @@ export const useBoardsStore = defineStore("boards", () => {
     sortOption,
     sortDirection,
     sortBoards,
+    searchBoards,
   };
 });

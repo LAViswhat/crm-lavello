@@ -16,7 +16,7 @@ onMounted(async () => {
         <LayoutNavigationSidebar></LayoutNavigationSidebar>
         <UiSidebarInset>
           <header
-            class="flex flex-row justify-between md:justify-end border bg-newblack border-newblack"
+            class="flex flex-row justify-start md:justify-end border bg-newblack border-newblack"
           >
             <UiSidebarTrigger class="flex md:hidden -ml-1 text-primary" />
             <LayoutNavigationHeader></LayoutNavigationHeader>

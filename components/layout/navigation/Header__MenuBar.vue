@@ -27,7 +27,7 @@ const handleSignOut = async () => {
           </div>
         </div>
       </UiMenubarTrigger>
-      <UiMenubarContent side="bottom" class="bg-gray-300/50 border-0">
+      <UiMenubarContent side="bottom" class="bg-newwhite border-0">
         <UiMenubarItem>
           <div class="flex items-center gap-2">
             <Icon name="lucide:settings" size="20" class="text-newblack" />

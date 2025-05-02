@@ -65,7 +65,7 @@ const handleValueChange = (value: any) => {
 
 <template>
   <UiSelect v-model="selectedValue" @update:modelValue="handleValueChange">
-    <UiSelectTrigger class="text-newwhite w-44 min-w-44">
+    <UiSelectTrigger class="text-newwhite w-full md:w-44 md:min-w-44">
       <UiSelectValue placeholder="Sort by" />
     </UiSelectTrigger>
     <UiSelectContent>
