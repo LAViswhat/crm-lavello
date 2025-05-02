@@ -19,6 +19,7 @@ export interface IBoard {
   boardDescription: string | "";
   gradient: string | "";
   createdAt: Date;
+  editedAt?: Date;
 }
 
 export const useBoardsStore = defineStore("boards", () => {
@@ -28,6 +29,10 @@ export const useBoardsStore = defineStore("boards", () => {
   const { currentUser } = storeToRefs(authStore);
   const db = getFirestore();
   const boards = ref<IBoard[]>([]);
+  const sortOption = ref<"createdAt" | "editedAt" | "boardName">(
+    (localStorage.getItem("boardSortOption") as any) || "createdAt"
+  );
+  const sortDirection = ref<"asc" | "desc">("desc");
 
   const createBoard = async (
     name: string,
@@ -69,8 +74,7 @@ export const useBoardsStore = defineStore("boards", () => {
     loader.value = true;
     try {
       const getData = query(
-        collection(db, "users", `${currentUser.value?.uid}`, "boards"),
-        orderBy("createdAt", "desc")
+        collection(db, "users", `${currentUser.value?.uid}`, "boards")
       );
 
       const docsList = await getDocs(getData);
@@ -80,14 +84,46 @@ export const useBoardsStore = defineStore("boards", () => {
         return {
           ...data,
           createdAt: data.createdAt.toDate(),
+          editedAt: data.editedAt ? data.editedAt.toDate() : undefined,
         } as IBoard;
       });
+      sortBoards();
     } catch (e) {
       console.error("Error fetching boards:", e);
     } finally {
       loader.value = false;
     }
   };
+
+  const sortBoards = () => {
+    boards.value.sort((a, b) => {
+      let result = 0;
+      switch (sortOption.value) {
+        case "createdAt":
+          result = b.createdAt.getTime() - a.createdAt.getTime();
+          break;
+
+        case "editedAt":
+          const aEditedAt = a.editedAt || a.createdAt;
+          const bEditedAt = b.editedAt || b.createdAt;
+          result = bEditedAt.getTime() - aEditedAt.getTime();
+          break;
+
+        case "boardName":
+          result = a.boardName.localeCompare(b.boardName, undefined, {
+            sensitivity: "base",
+          });
+          break;
+      }
+      return sortDirection.value === "desc" ? result : -result;
+    });
+    boards.value = [...boards.value];
+  };
+
+  watch(sortOption, (newValue) => {
+    localStorage.setItem("boardSortOption", newValue);
+    sortBoards();
+  });
 
   const getBoard = async (boardId: string): Promise<IBoard | null> => {
     if (!currentUser.value?.uid) return null;
@@ -154,5 +190,8 @@ export const useBoardsStore = defineStore("boards", () => {
     boards,
     updateBoard,
     removeBoard,
+    sortOption,
+    sortDirection,
+    sortBoards,
   };
 });
