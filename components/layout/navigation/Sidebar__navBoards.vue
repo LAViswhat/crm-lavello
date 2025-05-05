@@ -3,6 +3,7 @@ import { useBoardsStore } from "@/stores/boards";
 
 const boardStore = useBoardsStore();
 const boardList = computed(() => boardStore.boards);
+const route = useRoute();
 
 const handleClick = () => {
   const sidebar = document.querySelector('[data-sidebar="sidebar"]');
@@ -10,6 +11,15 @@ const handleClick = () => {
     sidebar.closest(".group")?.setAttribute("data-collapsible", "");
   }
 };
+const currentBoardId = computed(() => {
+  // Проверяем разные возможные форматы URL
+  if (route.params.boardId) return route.params.boardId as string;
+  if (route.path.startsWith("/board/")) {
+    const parts = route.path.split("/");
+    return parts[2]; // Возвращаем ID из /board/{id}
+  }
+  return undefined;
+});
 </script>
 <template>
   <UiCollapsible as-child :default-open="true" class="group/collapsible">
@@ -36,7 +46,12 @@ const handleClick = () => {
             v-for="board in boardList"
             :key="board.boardId"
             :id="board.boardId"
-            class="flex justify-between items-center flex-grow gap-2 py-1 px-2 ml-2 text-newwhite capitalize font-bold rounded-md duration-300 hover:text-[#1b9b4f] hover:opacity-70 hover:bg-newwhite cursor-pointer"
+            :class="[
+              'flex justify-between items-center flex-grow gap-2 py-1 px-2 ml-2 capitalize font-bold rounded-md duration-300 hover:opacity-70 hover:bg-newwhite cursor-pointer',
+              currentBoardId === board.boardId
+                ? 'bg-newwhite/90 text-primary'
+                : 'text-newwhite hover:text-[#1b9b4f]',
+            ]"
           >
             <div
               class="w-8 h-6 rounded-lg"

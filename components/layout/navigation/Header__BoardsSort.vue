@@ -1,13 +1,28 @@
 <script setup lang="ts">
 import { useBoardsStore } from "@/stores/boards";
 
+interface SortOption {
+  value: {
+    option: "createdAt" | "editedAt" | "boardName";
+    direction: "asc" | "desc";
+  };
+  label: string;
+}
+
+const props = defineProps({
+  iconOnly: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const boardStore = useBoardsStore();
 const selectedValue = ref({
   option: boardStore.sortOption,
   direction: boardStore.sortDirection,
 });
 
-const sortOptions = [
+const sortOptions: SortOption[] = [
   {
     value: {
       option: "createdAt",
@@ -65,7 +80,18 @@ const handleValueChange = (value: any) => {
 
 <template>
   <UiSelect v-model="selectedValue" @update:modelValue="handleValueChange">
-    <UiSelectTrigger class="text-newwhite w-full md:w-44 md:min-w-44">
+    <UiSelectTrigger
+      :class="[
+        'text-newwhite',
+        iconOnly
+          ? 'justify-center items-center border-none'
+          : 'w-full md:w-56 md:min-w-56',
+      ]"
+      ><Icon
+        name="hugeicons:sorting-05"
+        size="20"
+        class="text-newwhite hover:text-primary pr-4"
+      />
       <UiSelectValue placeholder="Sort by" />
     </UiSelectTrigger>
     <UiSelectContent>
@@ -81,3 +107,4 @@ const handleValueChange = (value: any) => {
     </UiSelectContent>
   </UiSelect>
 </template>
+UiSelectTrigge
