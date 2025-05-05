@@ -68,6 +68,7 @@ const currentBoardId = computed(() => {
                   class="flex flex-row flex-nowrap justify-center items-center gap-3 pt-1"
                 >
                   <LayoutBoardsBoardDialog
+                    class="pt-0.5"
                     mode="edit"
                     :board-id="board.boardId"
                   >
