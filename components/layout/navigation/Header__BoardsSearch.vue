@@ -30,11 +30,6 @@ watch(searchQuery, (newVal) => {
     searchResults.value = [];
   }
 });
-
-const hasResults = computed(() => searchResults.value.length > 0);
-const showNoResults = computed(
-  () => searchQuery.value.length >= 2 && !isLoading.value && !hasResults.value
-);
 </script>
 
 <template>
