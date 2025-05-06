@@ -6,6 +6,7 @@ const props = defineProps<{
   isEditing: boolean;
   tempListName: string;
   boardId?: string;
+  cardFilter?: string[];
 }>();
 
 defineEmits<{
@@ -46,7 +47,11 @@ onMounted(() => {
         Created: {{ list.createdAt.toLocaleDateString() }}
       </UiCardDescription>
     </UiCardHeader>
-    <LayoutCardsListCards :board-id="boardId" :list-id="list.listId" />
+    <LayoutCardsListCards
+      :board-id="boardId"
+      :list-id="list.listId"
+      :card-filter="cardFilter"
+    />
     <UiCardFooter class="justify-center">
       <LayoutCardsCardCreator
         :board-id="boardId || ''"

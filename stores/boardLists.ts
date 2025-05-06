@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "./auth";
+import { useListCardsStore, type ICard } from "./listCards";
 import { debounce } from "lodash";
 
 export interface IBoardList {
@@ -23,6 +24,7 @@ export interface IBoardList {
 export const useBoardListsStore = defineStore("boardLists", () => {
   const loader = ref(false);
   const authStore = useAuthStore();
+  const listCardsStore = useListCardsStore();
   const { currentUser } = storeToRefs(authStore);
   const db = getFirestore();
   const boardLists = ref<IBoardList[]>([]);
@@ -116,7 +118,7 @@ export const useBoardListsStore = defineStore("boardLists", () => {
             "lists",
             `${listId}`
           ),
-          { listName, updateAt: new Date() }
+          { listName, updatedAt: new Date() }
         );
         await getBoardLists(boadrdId);
       }
@@ -158,6 +160,60 @@ export const useBoardListsStore = defineStore("boardLists", () => {
     300
   );
 
+  const searchListsAndCards = (boardId: string, query: string) => {
+    if (!query.trim()) {
+      // Если запрос пустой, возвращаем все списки и пустые фильтры карточек
+      return {
+        filteredLists: boardLists.value,
+        cardFilters: new Map<string, string[]>(),
+      };
+    }
+
+    const searchTerms = query
+      .toLocaleLowerCase("ru-RU")
+      .split(/\s+/)
+      .filter(Boolean);
+
+    const matchingListIds = new Set<string>();
+    const cardFilters = new Map<string, string[]>();
+
+    // Поиск по спискам
+    boardLists.value.forEach((list) => {
+      if (
+        searchTerms.some((term) =>
+          list.listName.toLocaleLowerCase("ru-RU").includes(term)
+        )
+      ) {
+        matchingListIds.add(list.listId);
+      }
+    });
+
+    // Поиск по карточкам
+    const cards = Array.from(listCardsStore.allCards.values()).filter(
+      (card) => card.boardId === boardId
+    );
+    cards.forEach((card) => {
+      if (
+        searchTerms.some((term) =>
+          card.name.toLocaleLowerCase("ru-RU").includes(term)
+        )
+      ) {
+        matchingListIds.add(card.listId);
+        if (!cardFilters.has(card.listId)) {
+          cardFilters.set(card.listId, []);
+        }
+        cardFilters.get(card.listId)!.push(card.id);
+      }
+    });
+
+    // Фильтрация списков
+    const filteredLists = boardLists.value.filter((list) =>
+      matchingListIds.has(list.listId)
+    );
+
+    return { filteredLists, cardFilters };
+  };
+
   return {
     loader,
     createList,
@@ -165,5 +221,6 @@ export const useBoardListsStore = defineStore("boardLists", () => {
     boardLists,
     updateListName,
     updateBoardListOrder,
+    searchListsAndCards,
   };
 });

@@ -4,6 +4,7 @@ import { useBoardListsStore, type IBoardList } from "@/stores/boardLists";
 const props = defineProps<{
   boardId?: string;
   lists: IBoardList[];
+  cardFilters?: Map<string, string[]>;
 }>();
 
 const boardListsStore = useBoardListsStore();
@@ -82,6 +83,7 @@ const handleDraggableError = (error: any) => {
         :is-editing="editingListId === list.listId"
         :temp-list-name="tempListName"
         :board-id="boardId"
+        :card-filter="cardFilters?.get(list.listId)"
         @start-editing="startEditing"
         @save-list-name="saveListName"
         @cancel-editing="cancelEditing"

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useBoardsStore, type IBoard } from "@/stores/boards";
 import { useBoardListsStore, type IBoardList } from "@/stores/boardLists";
+import { useListCardsStore } from "@/stores/listCards";
 import { Timestamp } from "firebase/firestore";
 
 definePageMeta({
@@ -12,8 +13,12 @@ const route = useRoute();
 const router = useRouter();
 const boardStore = useBoardsStore();
 const boardListsStore = useBoardListsStore();
+const listCardsStore = useListCardsStore();
 const board = ref<IBoard | null>();
 const boardLists = ref<IBoardList[]>([]);
+const searchQuery = ref("");
+const filteredLists = ref<IBoardList[]>([]);
+const cardFilters = ref<Map<string, string[]>>(new Map());
 
 onMounted(async () => {
   await boardStore.getBoards();
@@ -22,7 +27,9 @@ onMounted(async () => {
     await router.push("/dashboard");
   } else {
     await boardListsStore.getBoardLists(board.value.boardId);
+    await listCardsStore.loadCardsForBoard(board.value.boardId);
     boardLists.value = boardListsStore.boardLists;
+    filteredLists.value = [...boardLists.value]; // Initialize with all lists
   }
 });
 
@@ -33,8 +40,26 @@ watchEffect(async () => {
       board.value = updatedBoard;
     }
     await boardListsStore.getBoardLists(board.value.boardId);
+    await listCardsStore.loadCardsForBoard(board.value.boardId);
     boardLists.value = boardListsStore.boardLists;
+    if (!searchQuery.value) {
+      filteredLists.value = [...boardLists.value];
+      cardFilters.value = new Map();
+    }
   }
+});
+
+// Compute filtered lists and card filters
+watch(searchQuery, () => {
+  if (!board.value) {
+    filteredLists.value = [];
+    cardFilters.value = new Map();
+    return;
+  }
+  const { filteredLists: newLists, cardFilters: newFilters } =
+    boardListsStore.searchListsAndCards(board.value.boardId, searchQuery.value);
+  filteredLists.value = [...newLists]; // Deep clone to ensure reactivity
+  cardFilters.value = new Map(newFilters); // Clone Map for reactivity
 });
 
 const boardCreatedAt = computed(() => {
@@ -65,12 +90,27 @@ const boardCreatedAt = computed(() => {
         :board-id="board?.boardId"
         class="bg-transparent"
       />
+      <div
+        v-if="filteredLists.length === 0 && searchQuery"
+        class="text-center text-newwhite z-40 mt-8"
+      >
+        No lists or cards match your search.
+      </div>
+      <div class="mr-4 z-20">
+        <LayoutBoardHeaderBoardSearch v-model:query="searchQuery" />
+      </div>
       <div class="absolute inset-0 bg-slate-500/50 z-10"></div>
     </div>
     <div class="board-canvas mt-8 px-8 flex-grow">
       <LayoutBoardListCreator :board-id="board?.boardId || ''" />
       <ClientOnly>
-        <LayoutBoardPageLists :board-id="board?.boardId" :lists="boardLists" />
+        <div>
+          <LayoutBoardPageLists
+            :board-id="board?.boardId"
+            :lists="filteredLists"
+            :card-filters="cardFilters"
+          />
+        </div>
       </ClientOnly>
     </div>
   </div>

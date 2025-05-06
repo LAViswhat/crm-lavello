@@ -4,12 +4,21 @@ import { useListCardsStore } from "@/stores/listCards";
 const props = defineProps<{
   boardId?: string;
   listId?: string;
+  cardFilter?: string[];
 }>();
 
 const listCardsStore = useListCardsStore();
 
-// Получаем карточки для текущего списка
-const cardsForList = listCardsStore.getCardsForList(props.listId || "");
+// Get cards for the list, optionally filtered
+const cardsForList = computed(() => {
+  let cards = listCardsStore
+    .getCardsForList(props.listId || "")
+    .value.sort((a, b) => a.order - b.order);
+  if (props.cardFilter && props.cardFilter.length > 0) {
+    cards = cards.filter((card) => props.cardFilter!.includes(card.id));
+  }
+  return cards;
+});
 
 // Загружаем карточки при монтировании
 onMounted(async () => {
@@ -63,7 +72,7 @@ const handleDraggableError = (error: any) => {
             class: 'draggableCardList space-y-2 min-h-[50px]',
           },
         }"
-        item-key="cardId"
+        item-key="id"
         :list="cardsForList"
         :group="{ name: 'cards', pull: true, put: true }"
         @change="onCardDragChange"
