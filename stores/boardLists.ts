@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "./auth";
+import { debounce } from "lodash";
 
 export interface IBoardList {
   listId: string;
@@ -126,36 +127,36 @@ export const useBoardListsStore = defineStore("boardLists", () => {
     }
   };
 
-  const updateBoardListOrder = async (
-    boardId: string,
-    reorderedLists: IBoardList[]
-  ): Promise<void> => {
-    loader.value = true;
+  const updateBoardListOrder = debounce(
+    async (boardId: string, reorderedLists: IBoardList[]): Promise<void> => {
+      loader.value = true;
 
-    try {
-      if (currentUser.value?.uid) {
-        const batch = writeBatch(db);
-        reorderedLists.forEach((list, index) => {
-          const listRef = doc(
-            db,
-            "users",
-            `${currentUser.value?.uid}`,
-            "boards",
-            `${boardId}`,
-            "lists",
-            `${list.listId}`
-          );
-          batch.update(listRef, { order: index });
-        });
-        await batch.commit();
-        await getBoardLists(boardId);
+      try {
+        if (currentUser.value?.uid) {
+          const batch = writeBatch(db);
+          reorderedLists.forEach((list, index) => {
+            const listRef = doc(
+              db,
+              "users",
+              `${currentUser.value?.uid}`,
+              "boards",
+              `${boardId}`,
+              "lists",
+              `${list.listId}`
+            );
+            batch.update(listRef, { order: index });
+          });
+          await batch.commit();
+          await getBoardLists(boardId);
+        }
+      } catch (e) {
+        console.error("Error updating list order: ", e);
+      } finally {
+        loader.value = false;
       }
-    } catch (e) {
-      console.error("Error updating list order: ", e);
-    } finally {
-      loader.value = false;
-    }
-  };
+    },
+    300
+  );
 
   return {
     loader,

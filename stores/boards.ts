@@ -13,6 +13,7 @@ import {
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "./auth";
+import debounce from "lodash/debounce";
 
 export interface IBoard {
   boardId: string;
@@ -70,7 +71,7 @@ export const useBoardsStore = defineStore("boards", () => {
     }
   };
 
-  const getBoards = async (): Promise<void> => {
+  const getBoards = debounce(async (): Promise<void> => {
     if (!currentUser.value?.uid) return;
     loader.value = true;
     try {
@@ -94,9 +95,9 @@ export const useBoardsStore = defineStore("boards", () => {
     } finally {
       loader.value = false;
     }
-  };
+  }, 300);
 
-  const sortBoards = () => {
+  const sortBoards = debounce(() => {
     boards.value.sort((a, b) => {
       let result = 0;
       switch (sortOption.value) {
@@ -119,40 +120,45 @@ export const useBoardsStore = defineStore("boards", () => {
       return sortDirection.value === "desc" ? result : -result;
     });
     boards.value = [...boards.value];
-  };
+  }, 300);
 
   watch(sortOption, (newValue) => {
     localStorage.setItem("boardSortOption", newValue);
     sortBoards();
   });
 
-  const searchBoards = async (searchTerm: string): Promise<IBoard[]> => {
-    if (!currentUser.value?.uid || searchTerm.length < 2) return [];
+  const searchBoards = debounce(
+    async (searchTerm: string): Promise<IBoard[]> => {
+      if (!currentUser.value?.uid || searchTerm.length < 2) return [];
 
-    try {
-      // Разбиваем поисковый запрос на отдельные слова
-      const searchTerms = searchTerm.toLowerCase().split(/\s+/).filter(Boolean);
+      try {
+        const searchTerms = searchTerm
+          .toLowerCase()
+          .split(/\s+/)
+          .filter(Boolean);
 
-      const boardsQuery = query(
-        collection(db, "users", currentUser.value.uid, "boards"),
-        orderBy("boardName")
-      );
+        const boardsQuery = query(
+          collection(db, "users", currentUser.value.uid, "boards"),
+          orderBy("boardName")
+        );
 
-      const querySnapshot = await getDocs(boardsQuery);
-      return querySnapshot.docs
-        .map((doc) => ({ ...(doc.data() as IBoard), boardId: doc.id }))
-        .filter((board) => {
-          const name = board.boardName.toLowerCase();
-          const desc = board.boardDescription?.toLowerCase() || "";
-          return searchTerms.some(
-            (term) => name.includes(term) || desc.includes(term)
-          );
-        });
-    } catch (e) {
-      console.error("Search error:", e);
-      return [];
-    }
-  };
+        const querySnapshot = await getDocs(boardsQuery);
+        return querySnapshot.docs
+          .map((doc) => ({ ...(doc.data() as IBoard), boardId: doc.id }))
+          .filter((board) => {
+            const name = board.boardName.toLowerCase();
+            const desc = board.boardDescription?.toLowerCase() || "";
+            return searchTerms.some(
+              (term) => name.includes(term) || desc.includes(term)
+            );
+          });
+      } catch (e) {
+        console.error("Search error:", e);
+        return [];
+      }
+    },
+    300
+  );
 
   const getBoard = async (boardId: string): Promise<IBoard | null> => {
     if (!currentUser.value?.uid) return null;
@@ -173,29 +179,32 @@ export const useBoardsStore = defineStore("boards", () => {
     }
   };
 
-  const updateBoard = async (
-    boardId: string,
-    name: string,
-    description: string | undefined,
-    gradient: string | undefined
-  ): Promise<void> => {
-    try {
-      if (currentUser.value?.uid) {
-        await updateDoc(
-          doc(db, "users", `${currentUser.value?.uid}`, "boards", boardId),
-          {
-            boardName: name,
-            boardDescription: description ?? "",
-            gradient: gradient ?? "",
-            editedAt: new Date(),
-          }
-        );
-        await getBoards();
+  const updateBoard = debounce(
+    async (
+      boardId: string,
+      name: string,
+      description: string | undefined,
+      gradient: string | undefined
+    ): Promise<void> => {
+      try {
+        if (currentUser.value?.uid) {
+          await updateDoc(
+            doc(db, "users", `${currentUser.value?.uid}`, "boards", boardId),
+            {
+              boardName: name,
+              boardDescription: description ?? "",
+              gradient: gradient ?? "",
+              editedAt: new Date(),
+            }
+          );
+          await getBoards();
+        }
+      } catch (e) {
+        console.error("Error updating document: ", e);
       }
-    } catch (e) {
-      console.error("Error updating document: ", e);
-    }
-  };
+    },
+    300
+  );
 
   const removeBoard = async (boardId: string): Promise<void> => {
     if (!currentUser.value?.uid) return;

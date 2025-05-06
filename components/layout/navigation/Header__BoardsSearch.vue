@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useBoardsStore } from "@/stores/boards";
+import { debounce } from "lodash";
 
 const boardsStore = useBoardsStore();
 const searchQuery = ref("");
@@ -7,7 +8,7 @@ const searchResults = ref<IBoard[]>([]);
 const isLoading = ref(false);
 const isOpen = ref(false);
 
-const performSearch = async (query: string) => {
+const performSearch = debounce(async (query: string) => {
   if (query.length < 2) {
     searchResults.value = [];
     isOpen.value = false;
@@ -17,11 +18,11 @@ const performSearch = async (query: string) => {
   isLoading.value = true;
   isOpen.value = true;
   try {
-    searchResults.value = await boardsStore.searchBoards(query);
+    searchResults.value = (await boardsStore.searchBoards(query)) || [];
   } finally {
     isLoading.value = false;
   }
-};
+}, 300);
 
 watch(searchQuery, (newVal) => {
   if (newVal) {

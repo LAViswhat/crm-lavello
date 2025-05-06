@@ -13,6 +13,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "./auth";
 import { defineStore, storeToRefs } from "pinia";
+import { debounce } from "lodash";
 
 export interface ICard {
   id: string;
@@ -128,121 +129,127 @@ export const useListCardsStore = defineStore("listCards", () => {
   };
 
   // Обновление порядка карточек
-  const updateCardOrder = async (
-    boardId: string,
-    listId: string,
-    orderedCards: ICard[]
-  ): Promise<void> => {
-    try {
-      if (!currentUser.value?.uid) return;
+  const updateCardOrder = debounce(
+    async (
+      boardId: string,
+      listId: string,
+      orderedCards: ICard[]
+    ): Promise<void> => {
+      try {
+        if (!currentUser.value?.uid) return;
 
-      const batch = writeBatch(db);
-      orderedCards.forEach((card, index) => {
-        const cardRef = doc(
-          db,
-          `users/${currentUser.value!.uid}/boards/${boardId}/cards/${card.id}`
-        );
-        batch.update(cardRef, {
-          order: index,
-          listId, // Обновляем listId на случай, если он изменился
+        const batch = writeBatch(db);
+        orderedCards.forEach((card, index) => {
+          const cardRef = doc(
+            db,
+            `users/${currentUser.value!.uid}/boards/${boardId}/cards/${card.id}`
+          );
+          batch.update(cardRef, {
+            order: index,
+            listId, // Обновляем listId на случай, если он изменился
+          });
+
+          // Обновляем локальное состояние
+          allCards.value.set(card.id, {
+            ...card,
+            order: index,
+            listId,
+          });
         });
 
-        // Обновляем локальное состояние
-        allCards.value.set(card.id, {
-          ...card,
-          order: index,
-          listId,
-        });
-      });
-
-      await batch.commit();
-    } catch (e) {
-      console.error("Error updating card order:", e);
-      // Восстанавливаем состояние
-      await loadCardsForBoard(boardId);
-      throw e;
-    }
-  };
+        await batch.commit();
+      } catch (e) {
+        console.error("Error updating card order:", e);
+        // Восстанавливаем состояние
+        await loadCardsForBoard(boardId);
+        throw e;
+      }
+    },
+    300
+  );
 
   // Перемещение карточки между списками
-  const moveCardToList = async (
-    boardId: string,
-    cardId: string,
-    targetListId: string,
-    targetIndex: number
-  ): Promise<void> => {
-    loader.value = true;
-    try {
-      if (!currentUser.value?.uid) return;
+  const moveCardToList = debounce(
+    async (
+      boardId: string,
+      cardId: string,
+      targetListId: string,
+      targetIndex: number
+    ): Promise<void> => {
+      loader.value = true;
+      try {
+        if (!currentUser.value?.uid) return;
 
-      const card = allCards.value.get(cardId);
-      if (!card) throw new Error("Card not found");
+        const card = allCards.value.get(cardId);
+        if (!card) throw new Error("Card not found");
 
-      const sourceListId = card.listId;
+        const sourceListId = card.listId;
 
-      // Получаем текущие карточки в целевом списке
-      const targetCards = Array.from(allCards.value.values())
-        .filter((c) => c.listId === targetListId && c.id !== cardId)
-        .sort((a, b) => a.order - b.order);
+        // Получаем текущие карточки в целевом списке
+        const targetCards = Array.from(allCards.value.values())
+          .filter((c) => c.listId === targetListId && c.id !== cardId)
+          .sort((a, b) => a.order - b.order);
 
-      // Вставляем карточку на новую позицию
-      targetCards.splice(targetIndex, 0, {
-        ...card,
-        listId: targetListId,
-        order: targetIndex,
-      });
-
-      // Обновляем порядок всех карточек в целевом списке
-      const updatedTargetCards = targetCards.map((c, index) => ({
-        ...c,
-        order: index,
-      }));
-
-      // Обновляем карточки в Firestore
-      const batch = writeBatch(db);
-
-      // Обновляем перемещаемую карточку
-      const cardRef = doc(
-        db,
-        `users/${currentUser.value.uid}/boards/${boardId}/cards/${cardId}`
-      );
-      batch.update(cardRef, {
-        listId: targetListId,
-        order: targetIndex,
-      });
-
-      // Обновляем порядок всех карточек в целевом списке
-      updatedTargetCards.forEach((c) => {
-        const ref = doc(
-          db,
-          `users/${currentUser.value!.uid}/boards/${boardId}/cards/${c.id}`
-        );
-        batch.update(ref, { order: c.order });
-      });
-
-      await batch.commit();
-
-      // Обновляем локальное состояние
-      updatedTargetCards.forEach((c) => {
-        allCards.value.set(c.id, c);
-      });
-
-      // Удаляем карточку из исходного списка в локальном состоянии
-      if (sourceListId !== targetListId) {
-        allCards.value.set(cardId, {
+        // Вставляем карточку на новую позицию
+        targetCards.splice(targetIndex, 0, {
           ...card,
           listId: targetListId,
           order: targetIndex,
         });
+
+        // Обновляем порядок всех карточек в целевом списке
+        const updatedTargetCards = targetCards.map((c, index) => ({
+          ...c,
+          order: index,
+        }));
+
+        // Обновляем карточки в Firestore
+        const batch = writeBatch(db);
+
+        // Обновляем перемещаемую карточку
+        const cardRef = doc(
+          db,
+          `users/${currentUser.value.uid}/boards/${boardId}/cards/${cardId}`
+        );
+        batch.update(cardRef, {
+          listId: targetListId,
+          order: targetIndex,
+        });
+
+        // Обновляем порядок всех карточек в целевом списке
+        updatedTargetCards.forEach((c) => {
+          const ref = doc(
+            db,
+            `users/${currentUser.value!.uid}/boards/${boardId}/cards/${c.id}`
+          );
+          batch.update(ref, { order: c.order });
+        });
+
+        await batch.commit();
+
+        // Обновляем локальное состояние
+        updatedTargetCards.forEach((c) => {
+          allCards.value.set(c.id, c);
+        });
+
+        // Удаляем карточку из исходного списка в локальном состоянии
+        if (sourceListId !== targetListId) {
+          allCards.value.set(cardId, {
+            ...card,
+            listId: targetListId,
+            order: targetIndex,
+          });
+        }
+      } catch (e) {
+        console.error("Error moving card:", e);
+        await loadCardsForBoard(boardId);
+        throw e;
+      } finally {
+        loader.value = false;
       }
-    } catch (e) {
-      console.error("Error moving card:", e);
-      await loadCardsForBoard(boardId);
-      throw e;
-    } finally {
-      loader.value = false;
-    }
-  };
+    },
+    300
+  );
 
   // Удаление карточки
   const deleteCard = async (boardId: string, cardId: string): Promise<void> => {
