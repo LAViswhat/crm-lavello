@@ -92,7 +92,7 @@ const handleValueChange = (value: any) => {
         size="20"
         class="text-newwhite hover:text-primary pr-4"
       />
-      <UiSelectValue placeholder="Sort by" />
+      <UiSelectValue placeholder="Sort boards by" />
     </UiSelectTrigger>
     <UiSelectContent>
       <UiSelectGroup>

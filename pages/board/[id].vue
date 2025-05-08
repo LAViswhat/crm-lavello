@@ -56,10 +56,15 @@ watch(searchQuery, () => {
     cardFilters.value = new Map();
     return;
   }
-  const { filteredLists: newLists, cardFilters: newFilters } =
-    boardListsStore.searchListsAndCards(board.value.boardId, searchQuery.value);
-  filteredLists.value = [...newLists]; // Deep clone to ensure reactivity
-  cardFilters.value = new Map(newFilters); // Clone Map for reactivity
+  if (searchQuery.value.length >= 2) {
+    const { filteredLists: newLists, cardFilters: newFilters } =
+      boardListsStore.searchListsAndCards(
+        board.value.boardId,
+        searchQuery.value
+      );
+    filteredLists.value = [...newLists]; // Deep clone to ensure reactivity
+    cardFilters.value = new Map(newFilters); // Clone Map for reactivity
+  }
 });
 
 const boardCreatedAt = computed(() => {

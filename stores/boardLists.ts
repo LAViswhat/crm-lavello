@@ -169,10 +169,7 @@ export const useBoardListsStore = defineStore("boardLists", () => {
       };
     }
 
-    const searchTerms = query
-      .toLocaleLowerCase("ru-RU")
-      .split(/\s+/)
-      .filter(Boolean);
+    const searchTerms = query.toLocaleLowerCase().split(/\s+/).filter(Boolean);
 
     const matchingListIds = new Set<string>();
     const cardFilters = new Map<string, string[]>();
@@ -181,7 +178,7 @@ export const useBoardListsStore = defineStore("boardLists", () => {
     boardLists.value.forEach((list) => {
       if (
         searchTerms.some((term) =>
-          list.listName.toLocaleLowerCase("ru-RU").includes(term)
+          list.listName.toLocaleLowerCase().includes(term)
         )
       ) {
         matchingListIds.add(list.listId);
@@ -194,9 +191,7 @@ export const useBoardListsStore = defineStore("boardLists", () => {
     );
     cards.forEach((card) => {
       if (
-        searchTerms.some((term) =>
-          card.name.toLocaleLowerCase("ru-RU").includes(term)
-        )
+        searchTerms.some((term) => card.name.toLocaleLowerCase().includes(term))
       ) {
         matchingListIds.add(card.listId);
         if (!cardFilters.has(card.listId)) {
