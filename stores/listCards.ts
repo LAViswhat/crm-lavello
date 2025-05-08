@@ -80,6 +80,11 @@ export const useListCardsStore = defineStore("listCards", () => {
         newCard
       );
 
+      await updateDoc(
+        doc(db, "users", `${currentUser.value?.uid}`, "boards", `${boardId}`),
+        { editedAt: new Date() }
+      );
+
       // Обновляем локальное состояние
       allCards.value.set(newCard.id, newCard);
     } catch (e) {
@@ -226,6 +231,11 @@ export const useListCardsStore = defineStore("listCards", () => {
         });
 
         await batch.commit();
+
+        await updateDoc(
+          doc(db, "users", `${currentUser.value?.uid}`, "boards", `${boardId}`),
+          { editedAt: new Date() }
+        );
 
         // Обновляем локальное состояние
         updatedTargetCards.forEach((c) => {

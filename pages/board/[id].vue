@@ -76,6 +76,16 @@ const boardCreatedAt = computed(() => {
   }
   return null;
 });
+
+const boardEditedAt = computed(() => {
+  if (board.value?.editedAt) {
+    if (board.value.editedAt instanceof Timestamp) {
+      return board.value.editedAt.toDate();
+    }
+    return board.value.editedAt as Date;
+  }
+  return null;
+});
 </script>
 
 <template>
@@ -92,6 +102,7 @@ const boardCreatedAt = computed(() => {
         :board-name="board?.boardName"
         :board-description="board?.boardDescription"
         :board-created-at="boardCreatedAt"
+        :board-edited-at="boardEditedAt"
         :board-id="board?.boardId"
         class="bg-transparent"
       />

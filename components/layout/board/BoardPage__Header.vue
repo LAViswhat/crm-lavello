@@ -3,6 +3,7 @@ const props = defineProps<{
   boardName: string | undefined;
   boardDescription: string | undefined;
   boardCreatedAt: Date | null;
+  boardEditedAt: Date | null;
   boardId: string | undefined;
 }>();
 </script>
@@ -72,6 +73,7 @@ const props = defineProps<{
       :board-name="boardName"
       :board-description="boardDescription"
       :board-created-at="boardCreatedAt"
+      :board-edited-at="boardEditedAt"
     ></LayoutBoardPageHeaderAboutContent>
   </UiSheet>
 </template>

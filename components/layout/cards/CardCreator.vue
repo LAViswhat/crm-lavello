@@ -43,15 +43,7 @@ const createCard = async () => {
           />
         </div>
         <div class="flex justify-around items-center">
-          <Icon
-            v-if="listCardsStore.loader"
-            name="line-md:loading-alt-loop"
-            size="36"
-            class="text-secondary"
-          />
-          <UiButton v-else variant="default" @click="createCard">
-            Add card
-          </UiButton>
+          <UiButton variant="default" @click="createCard"> Add card </UiButton>
           <UiButton variant="ghost" size="icon" @click="popoverIsOpen = false">
             <Icon
               name="charm:cross"

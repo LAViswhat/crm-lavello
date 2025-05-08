@@ -60,6 +60,12 @@ export const useBoardListsStore = defineStore("boardLists", () => {
           ),
           payload
         );
+
+        await updateDoc(
+          doc(db, "users", `${currentUser.value?.uid}`, "boards", `${boardId}`),
+          { editedAt: new Date() }
+        );
+
         await getBoardLists(boardId);
       }
     } catch (e) {
@@ -101,7 +107,7 @@ export const useBoardListsStore = defineStore("boardLists", () => {
   };
 
   const updateListName = async (
-    boadrdId: string,
+    boardId: string,
     listId: string,
     listName: string
   ): Promise<void> => {
@@ -114,13 +120,19 @@ export const useBoardListsStore = defineStore("boardLists", () => {
             "users",
             `${currentUser.value?.uid}`,
             "boards",
-            `${boadrdId}`,
+            `${boardId}`,
             "lists",
             `${listId}`
           ),
           { listName, updatedAt: new Date() }
         );
-        await getBoardLists(boadrdId);
+
+        await updateDoc(
+          doc(db, "users", `${currentUser.value?.uid}`, "boards", `${boardId}`),
+          { editedAt: new Date() }
+        );
+
+        await getBoardLists(boardId);
       }
     } catch (e) {
       console.error("Error updating list name: ", e);
