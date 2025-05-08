@@ -27,7 +27,7 @@ onMounted(() => {
 </script>
 <template>
   <UiCard class="draggableCard h-fit w-[268px]">
-    <UiCardHeader class="pb-2">
+    <UiCardHeader class="pb-2 relative">
       <div v-if="isEditing">
         <UiInput
           :model-value="tempListName"
@@ -43,6 +43,11 @@ onMounted(() => {
       <UiCardTitle v-else @click="$emit('startEditing', list)">
         {{ list.listName }}
       </UiCardTitle>
+      <LayoutBoardListMenuBar
+        class="absolute -top-3 right-0"
+        :board-id="boardId || ''"
+        :list-id="list?.listId || ''"
+      />
       <UiCardDescription>
         Created: {{ list.createdAt.toLocaleDateString() }}
       </UiCardDescription>
