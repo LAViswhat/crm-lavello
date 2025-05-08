@@ -58,10 +58,15 @@ onMounted(() => {
       :card-filter="cardFilter"
     />
     <UiCardFooter class="justify-center">
-      <LayoutCardsCardCreator
+      <LayoutCardCreator
         :board-id="boardId || ''"
         :list-id="list?.listId || ''"
-      />
+      >
+        <UiButton size="sm">
+          <Icon name="mynaui:plus" size="18" />
+          <span class="text-sm">Add a new card</span>
+        </UiButton>
+      </LayoutCardCreator>
     </UiCardFooter>
   </UiCard>
 </template>
