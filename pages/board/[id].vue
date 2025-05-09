@@ -106,16 +106,17 @@ const boardEditedAt = computed(() => {
         :board-id="board?.boardId"
         class="bg-transparent"
       />
-      <div
-        v-if="filteredLists.length === 0 && searchQuery"
-        class="text-center text-newwhite z-40 mt-8"
-      >
-        No lists or cards match your search.
-      </div>
+
       <div class="mr-4 z-20">
         <LayoutBoardHeaderBoardSearch v-model:query="searchQuery" />
       </div>
       <div class="absolute inset-0 bg-slate-500/50 z-10"></div>
+    </div>
+    <div
+      v-if="filteredLists.length === 0 && searchQuery"
+      class="text-center text-newwhite bg-slate-500/50 z-40 border-t py-2"
+    >
+      No lists or cards match your search.
     </div>
     <div class="board-canvas mt-8 px-8 flex-grow">
       <LayoutBoardListCreator :board-id="board?.boardId || ''" />
