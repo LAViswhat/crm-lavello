@@ -20,6 +20,12 @@ const currentBoardId = computed(() => {
   }
   return undefined;
 });
+
+const handleRemoveBoard = async () => {
+  if (currentBoardId.value) {
+    await boardStore.removeBoard(currentBoardId.value);
+  }
+};
 </script>
 <template>
   <UiCollapsible as-child :default-open="true" class="group/collapsible">
@@ -76,11 +82,15 @@ const currentBoardId = computed(() => {
                       <Icon name="mdi:text-box-edit-outline" size="16" />
                     </template>
                   </LayoutBoardsBoardDialog>
-                  <LayoutBoardsBoardCardRemoveDialog :board-id="board.boardId">
+                  <LayoutRemoveDialog
+                    :board-id="board.boardId"
+                    :description="'This action cannot be undone. This will permanently delete this board and remove your data from our servers.'"
+                    :onRemove="handleRemoveBoard"
+                  >
                     <template #alertTrigger
                       ><Icon name="wpf:full-trash" size="16" />
                     </template>
-                  </LayoutBoardsBoardCardRemoveDialog>
+                  </LayoutRemoveDialog>
                 </div>
               </UiSidebarMenuSubButton>
             </div>

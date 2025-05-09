@@ -6,6 +6,14 @@ const props = defineProps<{
   boardEditedAt: Date | null;
   boardId: string | undefined;
 }>();
+
+const boardStore = useBoardsStore();
+
+const handleRemoveBoard = async () => {
+  if (props.boardId) {
+    await boardStore.removeBoard(props.boardId);
+  }
+};
 </script>
 
 <template>
@@ -55,7 +63,11 @@ const props = defineProps<{
           </UiMenubarItem>
           <UiMenubarSeparator class="bg-0" />
           <UiMenubarItem as-child>
-            <LayoutBoardsBoardCardRemoveDialog :board-id="boardId">
+            <LayoutRemoveDialog
+              :board-id="boardId"
+              :description="'This action cannot be undone. This will permanently delete this board and remove your data from our servers.'"
+              :onRemove="handleRemoveBoard"
+            >
               <template #alertTrigger
                 ><div
                   class="flex items-center gap-2 w-full cursor-default select-none rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-white focus:bg-gray-100 focus:text-gray-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-gray-800 dark:focus:text-gray-50"
@@ -64,7 +76,7 @@ const props = defineProps<{
                   <span>Remove board</span>
                 </div>
               </template>
-            </LayoutBoardsBoardCardRemoveDialog>
+            </LayoutRemoveDialog>
           </UiMenubarItem>
         </UiMenubarContent>
       </UiMenubarMenu>
