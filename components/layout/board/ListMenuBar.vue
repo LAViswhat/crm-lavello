@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { list } from "postcss";
-
 const props = defineProps<{
   boardId: string;
   listId?: string;

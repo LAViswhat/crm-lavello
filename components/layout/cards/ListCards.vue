@@ -60,10 +60,20 @@ const onCardDragChange = async (event: any) => {
 const handleDraggableError = (error: any) => {
   console.error("Card draggable error:", error);
 };
+
+const handleRemoveCard = async (cardId: string) => {
+  try {
+    if (props.boardId) {
+      await listCardsStore.deleteCard(props.boardId, cardId);
+    }
+  } catch (error) {
+    console.error("Error deleting card:", error);
+  }
+};
 </script>
 <template>
   <ClientOnly>
-    <UiCardContent>
+    <UiCardContent class="px-4">
       <draggable
         tag="transition-group"
         :component-data="{
@@ -90,9 +100,20 @@ const handleDraggableError = (error: any) => {
           <div
             v-for="card in cardsForList"
             :key="card.id"
-            class="p-2 bg-gray-100 rounded-md"
+            class="p-2 min-h-16 bg-gray-100 rounded-md relative group"
           >
             <p class="text-sm font-medium">{{ card.name }}</p>
+            <Icon
+              name="cuida:edit-outline"
+              size="16"
+              class="absolute top-[6px] right-[6px] cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+            />
+            <Icon
+              @click="handleRemoveCard(card.id)"
+              name="mdi:card-remove-outline"
+              size="16"
+              class="absolute bottom-[6px] right-[6px] cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+            />
           </div>
         </template>
       </draggable>
