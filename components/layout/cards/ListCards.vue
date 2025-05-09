@@ -106,13 +106,13 @@ const handleRemoveCard = async (cardId: string) => {
             <Icon
               name="cuida:edit-outline"
               size="16"
-              class="absolute top-[6px] right-[6px] cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+              class="absolute top-[6px] right-[6px] cursor-pointer opacity-100 xl:opacity-0 xl:group-hover:opacity-100 transition-opacity"
             />
             <Icon
               @click="handleRemoveCard(card.id)"
               name="mdi:card-remove-outline"
               size="16"
-              class="absolute bottom-[6px] right-[6px] cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+              class="absolute bottom-[6px] right-[6px] cursor-pointer opacity-100 xl:opacity-0 xl:group-hover:opacity-100 transition-opacity"
             />
           </div>
         </template>
