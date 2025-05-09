@@ -275,6 +275,11 @@ export const useListCardsStore = defineStore("listCards", () => {
       );
 
       allCards.value.delete(cardId);
+
+      await updateDoc(
+        doc(db, "users", `${currentUser.value?.uid}`, "boards", `${boardId}`),
+        { editedAt: new Date() }
+      );
     } catch (e) {
       console.error("Error deleting card:", e);
       throw e;
@@ -282,7 +287,7 @@ export const useListCardsStore = defineStore("listCards", () => {
   };
 
   const deleteAllCardsInList = async (
-    boarId: string,
+    boardId: string,
     listId: string
   ): Promise<void> => {
     try {
@@ -294,7 +299,7 @@ export const useListCardsStore = defineStore("listCards", () => {
           "users",
           `${currentUser.value?.uid}`,
           "boards",
-          `${boarId}`,
+          `${boardId}`,
           "cards"
         ),
         where("listId", "==", listId)
@@ -308,7 +313,7 @@ export const useListCardsStore = defineStore("listCards", () => {
           "users",
           `${currentUser.value?.uid}`,
           "boards",
-          `${boarId}`,
+          `${boardId}`,
           "cards",
           cardDoc.id
         );
@@ -317,6 +322,11 @@ export const useListCardsStore = defineStore("listCards", () => {
         // Удаляем карточку из локального состояния
         allCards.value.delete(cardDoc.id);
       });
+
+      await updateDoc(
+        doc(db, "users", `${currentUser.value?.uid}`, "boards", `${boardId}`),
+        { editedAt: new Date() }
+      );
 
       await batch.commit();
     } catch (e) {
