@@ -9,6 +9,7 @@ import {
   updateDoc,
   writeBatch,
   deleteDoc,
+  where,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "./auth";
@@ -280,6 +281,50 @@ export const useListCardsStore = defineStore("listCards", () => {
     }
   };
 
+  const deleteAllCardsInList = async (
+    boarId: string,
+    listId: string
+  ): Promise<void> => {
+    try {
+      if (!currentUser.value?.uid) return;
+
+      const cardsQuery = query(
+        collection(
+          db,
+          "users",
+          `${currentUser.value?.uid}`,
+          "boards",
+          `${boarId}`,
+          "cards"
+        ),
+        where("listId", "==", listId)
+      );
+      const cardsSnap = await getDocs(cardsQuery);
+      const batch = writeBatch(db);
+
+      cardsSnap.forEach((cardDoc) => {
+        const cardRef = doc(
+          db,
+          "users",
+          `${currentUser.value?.uid}`,
+          "boards",
+          `${boarId}`,
+          "cards",
+          cardDoc.id
+        );
+        batch.delete(cardRef);
+
+        // Удаляем карточку из локального состояния
+        allCards.value.delete(cardDoc.id);
+      });
+
+      await batch.commit();
+    } catch (e) {
+      console.error("Error deleting all cards in list:", e);
+      throw e;
+    }
+  };
+
   return {
     allCards,
     getCardsForList,
@@ -288,6 +333,7 @@ export const useListCardsStore = defineStore("listCards", () => {
     updateCardOrder,
     moveCardToList,
     deleteCard,
+    deleteAllCardsInList,
     loader,
   };
 });

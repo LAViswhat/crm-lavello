@@ -8,6 +8,8 @@ import {
   getDocs,
   updateDoc,
   writeBatch,
+  where,
+  deleteDoc,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "./auth";
@@ -25,6 +27,7 @@ export const useBoardListsStore = defineStore("boardLists", () => {
   const loader = ref(false);
   const authStore = useAuthStore();
   const listCardsStore = useListCardsStore();
+  const { deleteAllCardsInList } = listCardsStore;
   const { currentUser } = storeToRefs(authStore);
   const db = getFirestore();
   const boardLists = ref<IBoardList[]>([]);
@@ -221,6 +224,43 @@ export const useBoardListsStore = defineStore("boardLists", () => {
     return { filteredLists, cardFilters };
   };
 
+  const deleteList = async (boardId: string, listId: string): Promise<void> => {
+    loader.value = true;
+    try {
+      if (!currentUser.value?.uid) return;
+
+      // Удаляем все карточки в списке
+      await deleteAllCardsInList(boardId, listId);
+
+      // Удаляем сам список
+      const listRef = doc(
+        db,
+        "users",
+        `${currentUser.value?.uid}`,
+        "boards",
+        `${boardId}`,
+        "lists",
+        `${listId}`
+      );
+      await deleteDoc(listRef);
+
+      // Обновляем поле editedAt у доски
+      await updateDoc(
+        doc(db, "users", `${currentUser.value?.uid}`, "boards", `${boardId}`),
+        { editedAt: new Date() }
+      );
+
+      // Удаляем список из локального состояния
+      boardLists.value = boardLists.value.filter(
+        (list) => list.listId !== listId
+      );
+    } catch (e) {
+      console.error("Error deleting list:", e);
+    } finally {
+      loader.value = false;
+    }
+  };
+
   return {
     loader,
     createList,
@@ -229,5 +269,6 @@ export const useBoardListsStore = defineStore("boardLists", () => {
     updateListName,
     updateBoardListOrder,
     searchListsAndCards,
+    deleteList,
   };
 });
