@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { useBoardListsStore } from "@/stores/boardLists";
-
 const props = defineProps<{
   boardId: string;
   listId?: string;
@@ -72,7 +69,7 @@ const changeOrder = async () => {
 
 <template>
   <UiPopover v-model:open="popoverIsOpen">
-    <UiPopoverTrigger class="text-left">
+    <UiPopoverTrigger class="text-left" v-if="availableOrders.length > 1">
       <slot name="trigger">
         <UiButton size="sm" variant="default">Change Order</UiButton>
       </slot>
