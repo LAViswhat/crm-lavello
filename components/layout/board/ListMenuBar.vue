@@ -58,18 +58,32 @@ const hasCards = computed(() => {
       >
         <UiMenubarItem as-child>
           <LayoutCardCreator :board-id="boardId" :list-id="listId">
-            <span class="text-sm pl-2">Add a new card</span>
+            <span
+              class="text-sm pl-2 h-7 flex items-center hover:bg-white rounded-sm"
+              >Add a new card</span
+            >
           </LayoutCardCreator>
         </UiMenubarItem>
-        <UiMenubarSeparator class="bg-0" />
         <UiMenubarItem as-child>
           <LayoutChangeListOrderDialog :board-id="boardId" :list-id="listId">
             <template #trigger>
-              <span class="text-sm pl-2">Change order of the list</span>
+              <div class="w-full hover:bg-white rounded-sm">
+                <span class="text-sm pl-2 py-1 hover:bg-white rounded-sm"
+                  >Change order of the list</span
+                >
+              </div>
             </template>
           </LayoutChangeListOrderDialog>
         </UiMenubarItem>
-        <UiMenubarSeparator class="bg-0" v-if="hasCards" />
+        <UiMenubarItem as-child v-if="hasCards">
+          <LayoutMoveAllCardsDialog :board-id="boardId" :list-id="listId || ''">
+            <template #trigger>
+              <div class="w-full hover:bg-white rounded-sm">
+                <span class="text-sm pl-2">Move all cards</span>
+              </div>
+            </template>
+          </LayoutMoveAllCardsDialog>
+        </UiMenubarItem>
         <UiMenubarItem as-child v-if="hasCards">
           <LayoutRemoveDialog
             :board-id="boardId"
@@ -77,13 +91,14 @@ const hasCards = computed(() => {
             :onRemove="handleDeleteAllCardsInList"
           >
             <template #alertTrigger>
-              <div class="text-left cursor-pointer">
+              <div
+                class="text-left cursor-pointer w-full hover:bg-white rounded-sm"
+              >
                 <span class="text-sm pl-2">Remove all cards from the list</span>
               </div>
             </template>
           </LayoutRemoveDialog>
         </UiMenubarItem>
-        <UiMenubarSeparator class="bg-0" />
         <UiMenubarItem as-child>
           <LayoutRemoveDialog
             :board-id="boardId"
@@ -91,7 +106,9 @@ const hasCards = computed(() => {
             :onRemove="handleDeleteList"
           >
             <template #alertTrigger>
-              <div class="text-left cursor-pointer">
+              <div
+                class="text-left cursor-pointer w-full hover:bg-white rounded-sm"
+              >
                 <span class="text-sm pl-2">Delete list</span>
               </div>
             </template>

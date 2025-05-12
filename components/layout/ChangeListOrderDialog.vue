@@ -88,7 +88,7 @@ const changeOrder = async () => {
                 :key="order"
                 :value="order"
               >
-                {{ order }}
+                {{ order + 1 }}
               </UiSelectItem>
             </UiSelectGroup>
           </UiSelectContent>
