@@ -8,8 +8,9 @@ import {
   getDocs,
   updateDoc,
   writeBatch,
-  where,
+  getDoc,
   deleteDoc,
+  where,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "./auth";
@@ -260,7 +261,6 @@ export const useBoardListsStore = defineStore("boardLists", () => {
       loader.value = false;
     }
   };
-
   return {
     loader,
     createList,

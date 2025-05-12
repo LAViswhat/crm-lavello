@@ -63,7 +63,11 @@ const hasCards = computed(() => {
         </UiMenubarItem>
         <UiMenubarSeparator class="bg-0" />
         <UiMenubarItem as-child>
-          <span>Переместить список</span>
+          <LayoutChangeListOrderDialog :board-id="boardId" :list-id="listId">
+            <template #trigger>
+              <span class="text-sm pl-2">Change order of the list</span>
+            </template>
+          </LayoutChangeListOrderDialog>
         </UiMenubarItem>
         <UiMenubarSeparator class="bg-0" v-if="hasCards" />
         <UiMenubarItem as-child v-if="hasCards">
