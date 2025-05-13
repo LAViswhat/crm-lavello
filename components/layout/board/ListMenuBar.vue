@@ -54,12 +54,12 @@ const hasCards = computed(() => {
       </UiMenubarTrigger>
       <UiMenubarContent
         side="bottom"
-        class="bg-newwhite border-0 w-full flex flex-col py-4 px-2 cursor-pointer"
+        class="bg-newwhite border-0 w-full flex flex-col gap-0.5 py-4 px-2 cursor-pointer"
       >
         <UiMenubarItem as-child>
           <LayoutCardCreator :board-id="boardId" :list-id="listId">
             <span
-              class="text-sm pl-2 h-7 flex items-center hover:bg-white rounded-sm"
+              class="text-sm px-2 h-8 flex items-center hover:bg-white rounded-sm"
               >Add a new card</span
             >
           </LayoutCardCreator>
@@ -67,10 +67,10 @@ const hasCards = computed(() => {
         <UiMenubarItem as-child>
           <LayoutChangeListOrderDialog :board-id="boardId" :list-id="listId">
             <template #trigger>
-              <div class="w-full hover:bg-white rounded-sm">
-                <span class="text-sm pl-2 py-1 hover:bg-white rounded-sm"
-                  >Change order of the list</span
-                >
+              <div
+                class="w-full h-8 flex items-center hover:bg-white rounded-sm"
+              >
+                <span class="text-sm px-2">Change order of the list</span>
               </div>
             </template>
           </LayoutChangeListOrderDialog>
@@ -78,8 +78,10 @@ const hasCards = computed(() => {
         <UiMenubarItem as-child v-if="hasCards">
           <LayoutMoveAllCardsDialog :board-id="boardId" :list-id="listId || ''">
             <template #trigger>
-              <div class="w-full hover:bg-white rounded-sm">
-                <span class="text-sm pl-2">Move all cards</span>
+              <div
+                class="w-full h-8 flex items-center hover:bg-white rounded-sm"
+              >
+                <span class="text-sm px-2">Move all cards</span>
               </div>
             </template>
           </LayoutMoveAllCardsDialog>
@@ -92,9 +94,9 @@ const hasCards = computed(() => {
           >
             <template #alertTrigger>
               <div
-                class="text-left cursor-pointer w-full hover:bg-white rounded-sm"
+                class="text-left cursor-pointer w-full h-8 flex items-center hover:bg-white rounded-sm"
               >
-                <span class="text-sm pl-2">Remove all cards from the list</span>
+                <span class="text-sm px-2">Remove all cards from the list</span>
               </div>
             </template>
           </LayoutRemoveDialog>
@@ -107,9 +109,9 @@ const hasCards = computed(() => {
           >
             <template #alertTrigger>
               <div
-                class="text-left cursor-pointer w-full hover:bg-white rounded-sm"
+                class="text-left cursor-pointer w-full h-8 flex items-center hover:bg-white rounded-sm"
               >
-                <span class="text-sm pl-2">Delete list</span>
+                <span class="text-sm px-2">Delete list</span>
               </div>
             </template>
           </LayoutRemoveDialog>
