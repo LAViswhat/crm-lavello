@@ -86,7 +86,7 @@ const moveCard = async () => {
         <Icon name="ic:round-move-up" size="16" />
       </slot>
     </UiPopoverTrigger>
-    <UiPopoverContent side="bottom">
+    <UiPopoverContent side="right">
       <div class="flex flex-col gap-4 p-4">
         <!-- Селект для выбора списка -->
         <UiLabel for="list-select">Choose list</UiLabel>
