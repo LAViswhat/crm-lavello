@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Timestamp } from "firebase/firestore";
+import { useFormatDate } from "@/composables/useFormatDate";
 const props = defineProps<{
   boardName: string | undefined;
   boardDescription: string | undefined;
@@ -7,40 +7,7 @@ const props = defineProps<{
   boardEditedAt: Date | null;
 }>();
 
-const formatDate = (date: string | Date | Timestamp | null) => {
-  if (!date) return "Unknown"; // Обработка null
-
-  if (typeof date === "string") {
-    const parsedDate = new Date(date);
-    return isNaN(parsedDate.getTime())
-      ? "Invalid Date"
-      : parsedDate.toLocaleDateString("en-GB", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-  }
-  if (date instanceof Date) {
-    return date.toLocaleDateString("en-GB", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  }
-  if (date && typeof date.toDate === "function") {
-    return date.toDate().toLocaleDateString("en-GB", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  }
-};
+const { formatDate } = useFormatDate();
 </script>
 <template>
   <UiSheetContent class="w-72">
