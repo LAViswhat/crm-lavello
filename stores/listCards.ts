@@ -21,9 +21,10 @@ export interface ICard {
   name: string;
   listId: string;
   boardId: string;
-  info?: any[];
+  info?: { description?: string } | Record<string, any>;
   order: number;
   createdAt: Date;
+  editedAt?: Date;
 }
 
 export const useListCardsStore = defineStore("listCards", () => {
@@ -70,6 +71,7 @@ export const useListCardsStore = defineStore("listCards", () => {
         boardId,
         order: newOrder,
         createdAt: new Date(),
+        info: {},
       };
 
       // Сохраняем в Firestore
@@ -121,7 +123,7 @@ export const useListCardsStore = defineStore("listCards", () => {
           boardId: data.boardId,
           order: data.order,
           createdAt: data.createdAt.toDate(),
-          info: data.info || [],
+          info: data.info || {},
         });
       });
 
@@ -262,6 +264,46 @@ export const useListCardsStore = defineStore("listCards", () => {
     300
   );
 
+  // Обновление данных карточки
+  const updateCard = async (
+    boardId: string,
+    cardId: string,
+    updatedData: Partial<ICard>
+  ): Promise<void> => {
+    try {
+      if (!currentUser.value?.uid) return;
+
+      const cardRef = doc(
+        db,
+        `users/${currentUser.value.uid}/boards/${boardId}/cards/${cardId}`
+      );
+
+      // Обновляем данные карточки в Firestore
+      await updateDoc(cardRef, {
+        ...updatedData,
+        editedAt: new Date(), // Добавляем время последнего изменения
+      });
+
+      // Обновляем локальное состояние
+      const existingCard = allCards.value.get(cardId);
+      if (existingCard) {
+        allCards.value.set(cardId, {
+          ...existingCard,
+          ...updatedData,
+          editedAt: new Date(),
+        });
+      }
+
+      await updateDoc(
+        doc(db, "users", `${currentUser.value?.uid}`, "boards", `${boardId}`),
+        { editedAt: new Date() }
+      );
+    } catch (e) {
+      console.error("Error updating card:", e);
+      throw e;
+    }
+  };
+
   // Удаление карточки
   const deleteCard = async (boardId: string, cardId: string): Promise<void> => {
     try {
@@ -342,6 +384,7 @@ export const useListCardsStore = defineStore("listCards", () => {
     loadCardsForBoard,
     updateCardOrder,
     moveCardToList,
+    updateCard,
     deleteCard,
     deleteAllCardsInList,
     loader,
