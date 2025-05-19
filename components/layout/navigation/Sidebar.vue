@@ -27,7 +27,7 @@
                 to="/dashboard"
                 class="flex items-center flex-grow gap-4 p-2 text-newwhite capitalize font-bold rounded-md duration-300 hover:text-[#1b9b4f] hover:opacity-70 hover:bg-newwhite"
               >
-                <Icon name="mage:dashboard" class="text-2xl" />
+                <Icon name="mage:dashboard-3" class="text-2xl" />
                 <span>Main</span>
               </NuxtLink>
             </UiSidebarMenuButton>

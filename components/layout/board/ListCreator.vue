@@ -22,7 +22,7 @@ const createList = async () => {
     <UiPopover v-model:open="popoverIsOpen">
       <UiPopoverTrigger>
         <UiButton variant="outline" size="md" class="justify-start !min-w-64">
-          <Icon name="mynaui:plus" size="24" class="" />
+          <Icon name="si:add-fill" size="24" class="" />
           <span class="text-lg">Add a new list</span>
         </UiButton>
       </UiPopoverTrigger>

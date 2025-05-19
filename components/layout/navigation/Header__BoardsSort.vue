@@ -88,7 +88,7 @@ const handleValueChange = (value: any) => {
           : 'w-full md:w-56 md:min-w-56',
       ]"
       ><Icon
-        name="hugeicons:sorting-05"
+        name="iconoir:sort"
         size="20"
         class="text-newwhite hover:text-primary pr-4"
       />

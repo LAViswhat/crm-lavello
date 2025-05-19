@@ -29,7 +29,7 @@ const handleRemoveBoard = async () => {
             <h2 class="normal-case mb-0 text-lg sm:text-2xl">
               {{ boardName }}
             </h2>
-            <Icon name="iwwa:option" size="28" />
+            <Icon name="cil:options" size="28" />
           </div>
         </UiMenubarTrigger>
         <UiMenubarContent

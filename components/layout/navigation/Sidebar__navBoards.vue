@@ -35,7 +35,7 @@ const handleRemoveBoard = async () => {
           <div
             class="flex items-center flex-grow gap-4 p-2 text-newwhite capitalize font-bold rounded-md duration-300 hover:text-[#1b9b4f] hover:opacity-70 hover:bg-newwhite"
           >
-            <Icon name="solar:clipboard-list-broken" class="text-2xl" />
+            <Icon name="fa-solid:list-alt" class="text-2xl" />
             <span>Boards</span>
             <Icon
               v-if="boardList.length"
@@ -104,8 +104,8 @@ const handleRemoveBoard = async () => {
         <LayoutBoardsBoardDialog mode="create">
           <template #trigger>
             <Icon
-              name="gg:add"
-              size="20"
+              name="si:add-fill"
+              size="24"
               class="text-newwhite hover:text-primary"
             />
           </template>
