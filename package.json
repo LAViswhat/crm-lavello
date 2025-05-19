@@ -26,6 +26,7 @@
     "lodash": "^4.17.21",
     "lucide-vue-next": "^0.468.0",
     "nuxt": "^3.14.1592",
+    "nuxt-tiptap-editor": "^2.2.1",
     "pinia": "^2.3.0",
     "radix-vue": "^1.9.11",
     "reka-ui": "^2.2.0",

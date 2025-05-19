@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@vee-validate/nuxt",
     "@pinia/nuxt",
+    "nuxt-tiptap-editor",
   ],
   shadcn: {
     prefix: "Ui",
@@ -20,5 +21,8 @@ export default defineNuxtConfig({
   tailwindcss: {
     cssPath: "~/assets/css/tailwind.css",
     configPath: "tailwind.config.js",
+  },
+  tiptap: {
+    prefix: "Tiptap", //prefix for Tiptap imports, composables not included
   },
 });
