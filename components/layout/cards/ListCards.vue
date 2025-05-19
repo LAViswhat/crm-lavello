@@ -97,7 +97,13 @@ const handleRemoveCard = async (cardId: string) => {
           <LayoutCardsCard
             v-for="card in cardsForList"
             :key="card.id"
-            :card="card"
+            :card="{
+              ...card,
+              info:
+                card.info && typeof card.info === 'object'
+                  ? { description: card.info.description }
+                  : { description: undefined },
+            }"
             :board-id="props.boardId"
             :list-id="props.listId"
             @remove="handleRemoveCard"
