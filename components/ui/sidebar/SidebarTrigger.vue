@@ -2,7 +2,6 @@
 import type { HTMLAttributes } from "vue";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { PanelLeft } from "lucide-vue-next";
 import { useSidebar } from "./utils";
 
 const props = defineProps<{
@@ -20,7 +19,7 @@ const { toggleSidebar } = useSidebar();
     :class="cn('h-16 w-16', props.class)"
     @click="toggleSidebar"
   >
-    <Icon name="icon-park-outline:expand-right" size="24" />
+    <Icon name="octicon:sidebar-expand-16" size="24" class="rotate-180" />
     <span class="sr-only">Toggle Sidebar</span>
   </Button>
 </template>
