@@ -97,47 +97,24 @@ const saveChanges = async () => {
       <!-- Описание карточки -->
       <div class="mt-4">
         <div class="flex justify-between items-center pb-2">
-          <span class="flex items-center gap-2 text-md text-primary"
-            ><Icon
+          <span class="flex items-center gap-2 text-md text-primary">
+            <Icon
               name="fluent:text-description-20-filled"
               size="20"
               class="text-primary"
             />Description</span
           >
-          <UiButton
-            v-if="card?.info?.description && !isEditingDescription"
-            variant="outline"
-            size="sm"
-            @click="isEditingDescription = true"
-            >Change</UiButton
-          >
         </div>
-        <p
-          v-if="!isEditingDescription"
-          @click="isEditingDescription = true"
-          class="text-sm pl-3 cursor-pointer"
-        >
-          {{
-            card?.info?.description
-              ? card.info.description
-              : "Add some additional information about the card here..."
-          }}
-        </p>
-
-        <UiTextarea
-          v-else
-          id="description"
+        <LayoutCardsCardDescriptionEditor
           v-model="description"
-          class="w-full"
-          placeholder="Add a description..."
-          @blur="
-            isEditingDescription = false;
-            saveChanges();
+          :editable="true"
+          @save="
+            (val) => {
+              description = val;
+              saveChanges();
+            }
           "
-          @keydown.enter="
-            isEditingDescription = false;
-            saveChanges();
-          "
+          @cancel="description = card?.info?.description || ''"
         />
       </div>
 
