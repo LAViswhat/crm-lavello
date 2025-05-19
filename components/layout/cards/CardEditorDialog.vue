@@ -104,17 +104,29 @@ const saveChanges = async () => {
               class="text-primary"
             />Description</span
           >
+          <UiButton
+            v-if="card?.info?.description && !isEditingDescription"
+            variant="outline"
+            size="sm"
+            @click="isEditingDescription = true"
+            >Change</UiButton
+          >
         </div>
         <LayoutCardsCardDescriptionEditor
           v-model="description"
           :editable="true"
+          :is-editing="isEditingDescription"
           @save="
             (val) => {
               description = val;
               saveChanges();
+              isEditingDescription = false;
             }
           "
-          @cancel="description = card?.info?.description || ''"
+          @cancel="
+            description = card?.info?.description || '';
+            isEditingDescription = false;
+          "
         />
       </div>
 
