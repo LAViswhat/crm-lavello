@@ -10,15 +10,16 @@ const props = defineProps<{
     side="right"
     class="bg-newwhite border-0 w-full flex flex-col"
   >
-    <UiSheetTrigger as-child>
+    <UiSheetTrigger class="p-0" as-child>
       <UiMenubarItem>
-        <div class="flex items-center gap-2">
-          <Icon name="ix:about" size="20" class="text-newblack" />
-          <span>About board</span>
-        </div>
+        <span
+          class="flex items-center gap-2 w-full text-sm px-2 py-1.5 hover:bg-white cursor-default"
+        >
+          <Icon name="ix:about" size="20" />About board</span
+        >
       </UiMenubarItem>
     </UiSheetTrigger>
-    <UiMenubarSeparator class="bg-0" />
+    <UiMenubarSeparator />
     <UiMenubarItem as-child>
       <LayoutBoardsBoardDialog mode="edit" :board-id="boardId">
         <template #trigger>
@@ -35,7 +36,7 @@ const props = defineProps<{
         </template>
       </LayoutBoardsBoardDialog>
     </UiMenubarItem>
-    <UiMenubarSeparator class="bg-0" />
+    <UiMenubarSeparator />
     <UiMenubarItem as-child>
       <LayoutRemoveDialog
         :board-id="boardId"

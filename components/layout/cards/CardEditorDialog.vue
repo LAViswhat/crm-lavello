@@ -91,6 +91,48 @@ const saveChanges = async () => {
             <span class="uppercase text-gray-600">In list:</span>
             <span class="normal-case">{{ listName }}</span>
           </UiDialogDescription>
+
+          <UiDialogDescription
+            v-if="card?.info?.badges"
+            class="flex items-center pl-3 mt-2"
+          >
+            <span class="uppercase text-xs text-gray-600 pr-1">Badges:</span>
+            <div class="flex flex-wrap gap-2">
+              <template
+                v-for="(badge, idx) in card?.info?.badges ?? []"
+                :key="idx"
+              >
+                <span
+                  v-if="card?.info?.badgesChecked?.[idx]"
+                  class="relative inline-flex items-center min-w-16 px-2 py-0.5 pr-4 rounded normal-case text-sm font-medium text-newblack"
+                  :style="{ background: badge.background }"
+                >
+                  {{ badge.label }}
+                  <Icon
+                    name="charm:cross"
+                    size="16"
+                    class="absolute inset-y-auto right-0 cursor-pointer"
+                    @click.stop="
+                      async () => {
+                        const updated = [...(card?.info?.badgesChecked ?? [])];
+                        updated[idx] = false;
+                        await listCardsStore.updateCard(
+                          props.boardId,
+                          props.cardId,
+                          {
+                            info: {
+                              ...(card?.info || {}),
+                              badgesChecked: updated,
+                            },
+                          }
+                        );
+                      }
+                    "
+                  />
+                </span>
+              </template>
+            </div>
+          </UiDialogDescription>
         </UiDialogTitle>
       </UiDialogHeader>
 
@@ -130,8 +172,11 @@ const saveChanges = async () => {
         />
       </div>
 
-      <UiDialogFooter class="!justify-start mt-4 text-xs text-gray-600">
-        <p>Created: {{ formatDate(card?.createdAt ?? null) }}</p>
+      <UiDialogFooter class="relative !justify-end mt-4 text-xs text-gray-600">
+        <p class="absolute top-[10px] left-0 mb-0">
+          Created: {{ formatDate(card?.createdAt ?? null) }}
+        </p>
+        <LayoutBadgeCreator :board-id="boardId" :card-id="cardId" />
       </UiDialogFooter>
     </UiDialogContent>
   </UiDialog>

@@ -16,12 +16,23 @@ import { useAuthStore } from "./auth";
 import { defineStore, storeToRefs } from "pinia";
 import { debounce } from "lodash";
 
+export interface IBadge {
+  label: string;
+  background: string;
+}
+
 export interface ICard {
   id: string;
   name: string;
   listId: string;
   boardId: string;
-  info?: { description?: string } | Record<string, any>;
+  info?:
+    | {
+        description?: string;
+        badges?: IBadge[];
+        badgesChecked?: boolean[];
+      }
+    | Record<string, any>;
   order: number;
   createdAt: Date;
   editedAt?: Date;
