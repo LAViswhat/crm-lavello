@@ -36,11 +36,11 @@ function toggleBadgeLabel() {
           <span
             @click="toggleBadgeLabel"
             v-if="cardFromStore?.info?.badgesChecked?.[idx]"
-            class="badge-container inline-flex items-center rounded text-xs font-medium cursor-pointer hover:opacity-70 transition-all duration-300 overflow-hidden"
+            class="badge-container inline-flex items-center rounded text-xs font-medium cursor-pointer hover:opacity-70 transition-all duration-300 overflow-hidden mb-1"
             :style="{
               background: badge.background,
               width: badgeLabelDisplay ? 'auto' : '2.5rem',
-              minWidth: badgeLabelDisplay ? 'auto' : '2.5rem',
+              minWidth: badgeLabelDisplay ? '2.5rem' : '2.5rem',
               height: badgeLabelDisplay ? '1.25rem' : '0.5rem',
             }"
           >

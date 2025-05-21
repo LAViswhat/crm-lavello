@@ -43,7 +43,7 @@ const handleRemoveBoard = async () => {
       :board-description="boardDescription"
       :board-created-at="boardCreatedAt"
       :board-edited-at="boardEditedAt"
-    ></LayoutBoardPageHeaderAboutContent>
+    />
   </UiSheet>
 </template>
 

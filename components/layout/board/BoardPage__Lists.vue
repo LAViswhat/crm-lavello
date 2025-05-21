@@ -2,12 +2,13 @@
 import { useBoardListsStore, type IBoardList } from "@/stores/boardLists";
 
 const props = defineProps<{
-  boardId?: string;
+  boardId: string;
   lists: IBoardList[];
   cardFilters?: Map<string, string[]>;
 }>();
 
 const boardListsStore = useBoardListsStore();
+const listCardsStore = useListCardsStore();
 const editingListId = ref<string | null>(null);
 const tempListName = ref("");
 
@@ -50,6 +51,19 @@ const onDragEnd = async () => {
 
 const handleDraggableError = (error: any) => {
   console.error("Draggable error:", error);
+};
+
+const getFilteredCards = (listId: string) => {
+  const allCards = listCardsStore.getCardsForList(listId).value;
+
+  // Если нет фильтров - все карточки
+  if (!props.cardFilters || !props.cardFilters.has(listId)) {
+    return allCards;
+  }
+
+  // Только отфильтрованные карточки
+  const filteredIds = props.cardFilters.get(listId) || [];
+  return allCards.filter((card) => filteredIds.includes(card.id));
 };
 </script>
 <template>

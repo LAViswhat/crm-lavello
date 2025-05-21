@@ -5,7 +5,7 @@ const props = defineProps<{
   list: IBoardList;
   isEditing: boolean;
   tempListName: string;
-  boardId?: string;
+  boardId: string;
   cardFilter?: string[];
 }>();
 

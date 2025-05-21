@@ -16,7 +16,6 @@ const boardListsStore = useBoardListsStore();
 const listCardsStore = useListCardsStore();
 const board = ref<IBoard | null>();
 const boardLists = ref<IBoardList[]>([]);
-const searchQuery = ref("");
 const filteredLists = ref<IBoardList[]>([]);
 const cardFilters = ref<Map<string, string[]>>(new Map());
 
@@ -42,28 +41,6 @@ watchEffect(async () => {
     await boardListsStore.getBoardLists(board.value.boardId);
     await listCardsStore.loadCardsForBoard(board.value.boardId);
     boardLists.value = boardListsStore.boardLists;
-    if (!searchQuery.value) {
-      filteredLists.value = [...boardLists.value];
-      cardFilters.value = new Map();
-    }
-  }
-});
-
-// Compute filtered lists and card filters
-watch(searchQuery, () => {
-  if (!board.value) {
-    filteredLists.value = [];
-    cardFilters.value = new Map();
-    return;
-  }
-  if (searchQuery.value.length >= 2) {
-    const { filteredLists: newLists, cardFilters: newFilters } =
-      boardListsStore.searchListsAndCards(
-        board.value.boardId,
-        searchQuery.value
-      );
-    filteredLists.value = [...newLists]; // Deep clone to ensure reactivity
-    cardFilters.value = new Map(newFilters); // Clone Map for reactivity
   }
 });
 
@@ -106,14 +83,16 @@ const boardEditedAt = computed(() => {
         :board-id="board?.boardId"
         class="bg-transparent"
       />
-
-      <div class="mr-4 z-20">
-        <LayoutBoardHeaderBoardSearch v-model:query="searchQuery" />
-      </div>
+      <LayoutListAndCardsFilterManager
+        :board-id="board.boardId"
+        :board-lists="boardLists"
+        @update:filteredLists="filteredLists = $event"
+        @update:cardFilters="cardFilters = $event"
+      />
       <div class="absolute inset-0 bg-slate-500/50 z-10"></div>
     </div>
     <div
-      v-if="filteredLists.length === 0 && searchQuery"
+      v-if="filteredLists.length === 0"
       class="text-center text-newwhite bg-slate-500/50 z-40 border-t py-2"
     >
       No lists or cards match your search.
