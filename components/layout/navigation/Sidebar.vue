@@ -33,6 +33,7 @@
             </UiSidebarMenuButton>
           </UiSidebarMenuItem>
           <LayoutNavigationSidebarNavBoards />
+          <LayoutNavigationSidebarNavTables />
         </UiSidebarMenu>
       </nav>
     </UiSidebarContent>
