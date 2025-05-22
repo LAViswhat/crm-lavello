@@ -44,7 +44,7 @@ watch(
 <template>
   <UiPopover>
     <UiPopoverTrigger class="z-20 text-newwhite">
-      <span class="flex items-center gap-0.5">
+      <span class="flex items-center gap-0.5 text-sm">
         <Icon name="tabler:filter-heart" size="24" />Filter by badges</span
       >
     </UiPopoverTrigger>

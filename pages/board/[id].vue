@@ -84,7 +84,7 @@ const boardEditedAt = computed(() => {
         class="bg-transparent"
       />
       <LayoutListAndCardsFilterManager
-        :board-id="board.boardId"
+        :board-id="board?.boardId"
         :board-lists="boardLists"
         @update:filteredLists="filteredLists = $event"
         @update:cardFilters="cardFilters = $event"
@@ -92,7 +92,7 @@ const boardEditedAt = computed(() => {
       <div class="absolute inset-0 bg-slate-500/50 z-10"></div>
     </div>
     <div
-      v-if="filteredLists.length === 0"
+      v-if="filteredLists.length === 0 && boardLists.length !== 0"
       class="text-center text-newwhite bg-slate-500/50 z-40 border-t py-2"
     >
       No lists or cards match your search.

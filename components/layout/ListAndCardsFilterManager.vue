@@ -109,7 +109,7 @@ watch(
 </script>
 
 <template>
-  <div class="flex justify-between items-center gap-8 mr-4 z-20">
+  <div class="flex justify-between items-center gap-1 lg:gap-8 mr-4 z-20">
     <LayoutBadgeFilter
       :board-id="boardId"
       @update:filter="(val) => (badgeFilter = val)"

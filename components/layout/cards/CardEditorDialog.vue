@@ -104,7 +104,7 @@ const saveChanges = async () => {
               >
                 <span
                   v-if="card?.info?.badgesChecked?.[idx]"
-                  class="relative inline-flex items-center min-w-16 px-2 py-0.5 pr-4 rounded normal-case text-sm font-medium text-newblack"
+                  class="relative inline-flex items-center min-w-16 h-6 px-2 py-0.5 pr-4 rounded normal-case text-sm font-medium text-newblack"
                   :style="{ background: badge.background }"
                 >
                   {{ badge.label }}
