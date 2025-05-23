@@ -7,6 +7,7 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
+  sendPasswordResetEmail,
   type User,
 } from "firebase/auth";
 import firebaseApp from "~/plugins/firebase.client";
@@ -131,6 +132,21 @@ export const useAuthStore = defineStore("auth", () => {
     });
   };
 
+  const resetPassword = async (email: string) => {
+    loader.value = true;
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      errorMessage.value = "Password reset email sent!";
+      setTimeout(() => (errorMessage.value = ""), 3000);
+    } catch (error) {
+      handleError(error);
+      throw error;
+    } finally {
+      loader.value = false;
+    }
+  };
+
   return {
     errorMessage,
     loader,
@@ -143,5 +159,6 @@ export const useAuthStore = defineStore("auth", () => {
     isAuthInitialized,
     signInWithGoogle,
     waitForAuthState,
+    resetPassword,
   };
 });

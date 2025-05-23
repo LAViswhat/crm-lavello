@@ -29,6 +29,13 @@ const authStore = useAuthStore();
 const onSubmit = form.handleSubmit(async (values) => {
   await authStore.signIn(values.email, values.password);
 });
+
+const showReset = ref(false);
+const resetEmail = ref("");
+const onReset = async () => {
+  await authStore.resetPassword(resetEmail.value);
+  showReset.value = false;
+};
 </script>
 <template>
   <div
@@ -118,6 +125,43 @@ const onSubmit = form.handleSubmit(async (values) => {
           >
         </div>
       </form>
+      <UiDialog v-model:open="showReset">
+        <UiDialogTrigger as-child>
+          <div class="text-center">
+            <UiButton
+              variant="link"
+              size="sm"
+              class="text-newblack/40 hover:text-newblack"
+            >
+              Forgot your password?
+            </UiButton>
+          </div>
+        </UiDialogTrigger>
+        <UiDialogContent>
+          <UiDialogHeader>
+            <UiDialogTitle>Reset password</UiDialogTitle>
+            <UiDialogDescription
+              >A link to reset your password will be sent to your email
+              address</UiDialogDescription
+            >
+          </UiDialogHeader>
+          <form @submit.prevent="onReset" class="flex items-center gap-2">
+            <UiInput
+              v-model="resetEmail"
+              type="email"
+              placeholder="Enter your email"
+              required
+            />
+            <UiButton
+              type="submit"
+              variant="outline"
+              size="md"
+              :disabled="authStore.loader"
+              >Send reset link</UiButton
+            >
+          </form>
+        </UiDialogContent>
+      </UiDialog>
     </div>
   </div>
 </template>
