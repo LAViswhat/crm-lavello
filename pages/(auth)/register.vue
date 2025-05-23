@@ -64,13 +64,21 @@ const onSubmit = form.handleSubmit(async (values) => {
       class="rounded-md bg-newwhite shadow-md border-newblack w-5/6 md:w-2/4 px-2 py-4 z-10 relative"
     >
       <header
-        class="bg-primary rounded-md flex justify-center items-center w-3/4 absolute top-3 left-2/4 -translate-x-2/4 -translate-y-2/4"
+        class="bg-primary rounded-md flex flex-col justify-center items-center w-3/4 absolute top-3 left-2/4 -translate-x-2/4 -translate-y-2/4"
       >
-        <h2 class="text-newwhite capitalize pt-2">Register</h2>
+        <h2 class="text-newwhite capitalize p-2">Register</h2>
+        <UiButton
+          variant="ghost"
+          @click="authStore.signInWithGoogle"
+          class="hover:text-secondary"
+        >
+          <Icon name="fontisto:google-plus" size="20" />
+        </UiButton>
+        <p class="text-xs text-newwhite italic">or be classical</p>
       </header>
       <form
         @submit="onSubmit"
-        class="mt-12 flex flex-col items-center justify-center gap-4 px-4"
+        class="mt-16 flex flex-col items-center justify-center gap-4 px-4"
       >
         <div class="text-left text-newblack w-full flex flex-wrap items-center">
           <Icon name="mingcute:question-line" size="18" class="mb-[2px]" />

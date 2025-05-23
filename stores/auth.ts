@@ -5,6 +5,8 @@ import {
   updateProfile,
   signOut as firebaseSignOut,
   onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
   type User,
 } from "firebase/auth";
 import firebaseApp from "~/plugins/firebase.client";
@@ -101,6 +103,22 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
+  const signInWithGoogle = async () => {
+    loader.value = true;
+
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      updateAuthState(result.user);
+      return result.user;
+    } catch (error) {
+      handleError(error);
+      throw error;
+    } finally {
+      loader.value = false;
+    }
+  };
+
   const waitForAuthState = (): Promise<void> => {
     return new Promise((resolve) => {
       // возращает промис, который не завершится пока не будет вызван resolve
@@ -123,6 +141,7 @@ export const useAuthStore = defineStore("auth", () => {
     isAuthenticated,
     currentUser,
     isAuthInitialized,
+    signInWithGoogle,
     waitForAuthState,
   };
 });
