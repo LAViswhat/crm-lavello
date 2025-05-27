@@ -31,12 +31,15 @@ const handleSignOut = async () => {
         <UiMenubarItem>
           <div class="flex items-center gap-2">
             <Icon name="lucide:settings" size="20" class="text-newblack" />
-            <span>Profile settings</span>
+            <NuxtLink to="/profile"> <span>Profile settings</span></NuxtLink>
           </div>
         </UiMenubarItem>
         <UiMenubarSeparator class="bg-0" />
         <UiMenubarItem
-          ><div class="flex items-center gap-2" @click="handleSignOut">
+          ><div
+            class="flex items-center gap-2 cursor-pointer"
+            @click="handleSignOut"
+          >
             <Icon name="line-md:logout" size="20" class="text-newblack" />
             <span>Log out</span>
           </div></UiMenubarItem
