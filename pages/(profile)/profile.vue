@@ -92,10 +92,16 @@ const handleSignOut = async () => {
               </UiDialog>
             </li>
             <UiSeparator />
-            <li
-              class="inline-flex items-center justify-between cursor-pointer duration-200 ease-in-out hover:-translate-y-0.5 hover:opacity-80"
-            >
-              Change password <Icon name="fluent:arrow-right-12-filled" />
+            <li>
+              <UiDialog>
+                <UiDialogTrigger
+                  class="w-full inline-flex justify-between items-center duration-200 ease-in-out hover:-translate-y-0.5 hover:opacity-80"
+                >
+                  Change password
+                  <Icon name="fluent:arrow-right-12-filled" />
+                </UiDialogTrigger>
+                <LayoutProfilePasswordChangerDialog />
+              </UiDialog>
             </li>
             <UiSeparator />
             <li

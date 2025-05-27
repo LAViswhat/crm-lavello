@@ -9,6 +9,9 @@ import {
   signInWithPopup,
   sendPasswordResetEmail,
   type User,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
 } from "firebase/auth";
 import firebaseApp from "~/plugins/firebase.client";
 
@@ -164,6 +167,37 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
+  const reauthenticateUser = async (email: string, currentPassword: string) => {
+    loader.value = true;
+
+    try {
+      if (!currentUser.value) throw new Error("No user");
+      const credential = EmailAuthProvider.credential(email, currentPassword);
+      await reauthenticateWithCredential(currentUser.value, credential);
+      errorMessage.value = "";
+    } catch (error) {
+      handleError(error);
+      throw error;
+    } finally {
+      loader.value = false;
+    }
+  };
+
+  const changePassword = async (newPassword: string) => {
+    loader.value = true;
+    try {
+      if (!currentUser.value) throw new Error("No user");
+      await updatePassword(currentUser.value, newPassword);
+      errorMessage.value = "Password changed successfully!";
+      setTimeout(() => (errorMessage.value = ""), 1500);
+    } catch (error) {
+      handleError(error);
+      throw error;
+    } finally {
+      loader.value = false;
+    }
+  };
+
   return {
     errorMessage,
     loader,
@@ -178,5 +212,7 @@ export const useAuthStore = defineStore("auth", () => {
     waitForAuthState,
     resetPassword,
     changeDisplayName,
+    reauthenticateUser,
+    changePassword,
   };
 });
