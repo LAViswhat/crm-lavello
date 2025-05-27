@@ -12,6 +12,7 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
   updatePassword,
+  deleteUser,
 } from "firebase/auth";
 import firebaseApp from "~/plugins/firebase.client";
 
@@ -198,6 +199,19 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
+  const deleteAccount = async () => {
+    loader.value = true;
+    try {
+      if (!currentUser.value) throw new Error("No user");
+      await deleteUser(currentUser.value);
+      updateAuthState(null);
+      await router.push("/signin");
+    } catch (error) {
+      handleError(error);
+      throw error;
+    }
+  };
+
   return {
     errorMessage,
     loader,
@@ -214,5 +228,6 @@ export const useAuthStore = defineStore("auth", () => {
     changeDisplayName,
     reauthenticateUser,
     changePassword,
+    deleteAccount,
   };
 });

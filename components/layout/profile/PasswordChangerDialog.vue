@@ -142,13 +142,7 @@ const onReauth = async () => {
           type="password"
         />
         <UiButton type="submit">
-          <Icon
-            v-if="authStore.loader"
-            name="line-md:loading-alt-loop"
-            size="36"
-            class="text-secondary"
-          />
-          <span v-else>Continue</span>
+          <span>Continue</span>
         </UiButton>
       </form>
       <div v-if="authStore.errorMessage" class="text-primary mt-2">
