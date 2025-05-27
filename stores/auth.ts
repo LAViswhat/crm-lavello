@@ -147,6 +147,23 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
+  const changeDisplayName = async (newName: string) => {
+    loader.value = true;
+    try {
+      if (!currentUser.value) throw new Error("No user");
+      await updateProfile(currentUser.value, { displayName: newName });
+
+      updateAuthState(currentUser.value);
+      errorMessage.value = "Name changed successfully!";
+      setTimeout(() => (errorMessage.value = ""), 1500);
+    } catch (error) {
+      handleError(error);
+      throw error;
+    } finally {
+      loader.value = false;
+    }
+  };
+
   return {
     errorMessage,
     loader,
@@ -160,5 +177,6 @@ export const useAuthStore = defineStore("auth", () => {
     signInWithGoogle,
     waitForAuthState,
     resetPassword,
+    changeDisplayName,
   };
 });

@@ -49,7 +49,7 @@ const handleSignOut = async () => {
         <ClientOnly>
           <div class="flex flex-col justify-start items-center h-full">
             <div class="flex items-center justify-center gap-1 px-2 py-6">
-              <img src="/public/profile.svg" />
+              <img src="/public/profile.svg" width="52" height="52" />
               <h2 class="mb-0 normal-case text-xl xl:text-3xl">Settings</h2>
             </div>
             <div class="flex flex-col px-4 pb-4">
@@ -80,10 +80,16 @@ const handleSignOut = async () => {
         <div class="bg-white rounded-md p-8 w-full max-w-screen-md">
           <h3 class="normal-case text-newblack text-2xl">Account access</h3>
           <ul class="pl-0 flex flex-col gap-2">
-            <li
-              class="inline-flex items-center justify-between cursor-pointer duration-200 ease-in-out hover:-translate-y-0.5 hover:opacity-80"
-            >
-              Change account name <Icon name="fluent:arrow-right-12-filled" />
+            <li>
+              <UiDialog>
+                <UiDialogTrigger
+                  class="w-full inline-flex justify-between items-center duration-200 ease-in-out hover:-translate-y-0.5 hover:opacity-80"
+                >
+                  Change account name
+                  <Icon name="fluent:arrow-right-12-filled" />
+                </UiDialogTrigger>
+                <LayoutProfileNameChangerDialog />
+              </UiDialog>
             </li>
             <UiSeparator />
             <li
