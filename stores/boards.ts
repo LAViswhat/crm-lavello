@@ -10,6 +10,7 @@ import {
   updateDoc,
   deleteDoc,
   where,
+  writeBatch,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "./auth";
@@ -209,14 +210,69 @@ export const useBoardsStore = defineStore("boards", () => {
   const removeBoard = async (boardId: string): Promise<void> => {
     if (!currentUser.value?.uid) return;
 
+    loader.value = true;
     try {
-      await deleteDoc(
-        doc(db, "users", `${currentUser.value?.uid}`, "boards", boardId)
+      const listsStore = useBoardListsStore();
+      await listsStore.getBoardLists(boardId);
+      const lists = listsStore.boardLists;
+
+      const cardsStore = useListCardsStore();
+      await cardsStore.loadCardsForBoard(boardId);
+      const cards = Array.from(cardsStore.allCards.values()).filter(
+        (card) => card.boardId === boardId
       );
+
+      const batch = writeBatch(db);
+
+      for (const list of lists) {
+        const listRef = doc(
+          db,
+          "users",
+          `${currentUser.value?.uid}`,
+          "boards",
+          boardId,
+          "lists",
+          list.listId
+        );
+        batch.delete(listRef);
+
+        listsStore.boardLists = listsStore.boardLists.filter(
+          (l) => list.listId !== list.listId
+        );
+      }
+
+      for (const card of cards) {
+        const cardRef = doc(
+          db,
+          "users",
+          `${currentUser.value?.uid}`,
+          "boards",
+          boardId,
+          "cards",
+          card.id
+        );
+        batch.delete(cardRef);
+
+        cardsStore.allCards.delete(card.id);
+      }
+
+      const boardRef = doc(
+        db,
+        "users",
+        `${currentUser.value?.uid}`,
+        "boards",
+        boardId
+      );
+      batch.delete(boardRef);
+
+      await batch.commit();
+
       await getBoards();
       await router.push("/dashboard");
     } catch (e) {
       console.error("Error removing document: ", e);
+    } finally {
+      loader.value = false;
     }
   };
 
