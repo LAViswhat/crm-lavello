@@ -32,17 +32,16 @@ onMounted(async () => {
   }
 });
 
-watchEffect(async () => {
-  if (board.value) {
-    const updatedBoard = await boardStore.getBoard(board.value.boardId);
-    if (updatedBoard) {
-      board.value = updatedBoard;
+watch(
+  () => board.value?.boardId,
+  async (newBoardId, oldBoardId) => {
+    if (newBoardId && newBoardId !== oldBoardId) {
+      await boardListsStore.getBoardLists(newBoardId);
+      await listCardsStore.loadCardsForBoard(newBoardId);
+      boardLists.value = boardListsStore.boardLists;
     }
-    await boardListsStore.getBoardLists(board.value.boardId);
-    await listCardsStore.loadCardsForBoard(board.value.boardId);
-    boardLists.value = boardListsStore.boardLists;
   }
-});
+);
 
 const boardCreatedAt = computed(() => {
   if (board.value?.createdAt) {
@@ -84,7 +83,7 @@ const boardEditedAt = computed(() => {
         class="bg-transparent"
       />
       <LayoutListAndCardsFilterManager
-        :board-id="board?.boardId"
+        :board-id="board?.boardId || ''"
         :board-lists="boardLists"
         @update:filteredLists="filteredLists = $event"
         @update:cardFilters="cardFilters = $event"
@@ -102,7 +101,7 @@ const boardEditedAt = computed(() => {
       <ClientOnly>
         <div>
           <LayoutBoardPageLists
-            :board-id="board?.boardId"
+            :board-id="board?.boardId || ''"
             :lists="filteredLists"
             :card-filters="cardFilters"
           />
