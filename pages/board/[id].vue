@@ -15,7 +15,7 @@ const boardStore = useBoardsStore();
 const boardListsStore = useBoardListsStore();
 const listCardsStore = useListCardsStore();
 const board = ref<IBoard | null>();
-const boardLists = ref<IBoardList[]>([]);
+const boardLists = computed(() => boardListsStore.boardLists);
 const filteredLists = ref<IBoardList[]>([]);
 const cardFilters = ref<Map<string, string[]>>(new Map());
 
@@ -27,7 +27,6 @@ onMounted(async () => {
   } else {
     await boardListsStore.getBoardLists(board.value.boardId);
     await listCardsStore.loadCardsForBoard(board.value.boardId);
-    boardLists.value = boardListsStore.boardLists;
     filteredLists.value = [...boardLists.value]; // Initialize with all lists
   }
 });
@@ -38,7 +37,7 @@ watch(
     if (newBoardId && newBoardId !== oldBoardId) {
       await boardListsStore.getBoardLists(newBoardId);
       await listCardsStore.loadCardsForBoard(newBoardId);
-      boardLists.value = boardListsStore.boardLists;
+      filteredLists.value = [...boardLists.value];
     }
   }
 );
