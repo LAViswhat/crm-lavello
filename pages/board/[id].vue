@@ -14,14 +14,15 @@ const router = useRouter();
 const boardStore = useBoardsStore();
 const boardListsStore = useBoardListsStore();
 const listCardsStore = useListCardsStore();
-const board = ref<IBoard | null>();
+const board = computed(() =>
+  boardStore.boards.find((b) => b.boardId === route.params.id)
+);
 const boardLists = computed(() => boardListsStore.boardLists);
 const filteredLists = ref<IBoardList[]>([]);
 const cardFilters = ref<Map<string, string[]>>(new Map());
 
 onMounted(async () => {
   await boardStore.getBoards();
-  board.value = await boardStore.getBoard(route.params.id as string);
   if (!board.value) {
     await router.push("/dashboard");
   } else {
