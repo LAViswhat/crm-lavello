@@ -22,6 +22,7 @@ onMounted(async () => {
             <LayoutNavigationHeader></LayoutNavigationHeader>
           </header>
           <slot />
+          <LayoutFooterDashboard />
         </UiSidebarInset>
       </UiSidebarProvider>
     </template>
